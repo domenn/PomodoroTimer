@@ -1,0 +1,10 @@
+//
+// Created by domen on 31/10/18.
+//
+
+#ifndef POMODOROTIMER_POMODOROSTATE_H
+#define POMODOROTIMER_POMODOROSTATE_H
+
+enum class PomodoroState { WORK, PAUSE, LONG_PAUSE, INTERRUPTED};
+
+#endif //POMODOROTIMER_POMODOROSTATE_H

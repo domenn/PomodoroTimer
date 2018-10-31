@@ -16,12 +16,12 @@ find_package(Qt5Widgets CONFIG REQUIRED)
 
 # Populate a CMake variable with the sources
 
-file(GLOB SOURCE_FILES
+file(GLOB_RECURSE SOURCE_FILES
         ./PomodoroTimerApp/*.cpp
         ./PomodoroTimerApp/*.h
         )
 
-file(GLOB SOURCE_FILES1
+file(GLOB_RECURSE SOURCE_FILES1
         ./ExampleFromOnline/*.cpp
         ./ExampleFromOnline/*.h
         )
