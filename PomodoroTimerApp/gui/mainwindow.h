@@ -21,7 +21,7 @@ class MainWindow : public QDialog {
 
     bool is_stopwatch_mode;
     qint32  counter;
-    Session session;
+    Session *session;
 
     QMenuBar *menuBar;
     QMenu *fileMenu;
@@ -64,6 +64,10 @@ public:
 
 
     void handleCommandLineArguments(QApplication *application);
+
+    QString getLogFilePath();
+
+    int tickCount = 0;
 };
 
 #endif // MAINWINDOW_H

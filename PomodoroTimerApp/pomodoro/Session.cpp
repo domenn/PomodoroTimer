@@ -18,21 +18,22 @@ void Session::interrupt() {
 
 }
 
-void Session::decide() {
+QString Session::decide() {
+    // REFACTOR: find a way to handle return values .. strings
     if (current_run == nullptr){
         beginWorkInitial();
-        return;
+        return "Pause";
     }
     switch (current_run->getState()){
         case PomodoroState::WORK:
             interrupt();
-            break;
+            return "Resume";
         case PomodoroState::INTERRUPTED:
             resumeInterrupt();
-            break;
+            return "Pause";
         case PomodoroState::LONG_PAUSE:
         case PomodoroState::PAUSE:
-            beginWork();
+            return "Pause";
     }
 }
 

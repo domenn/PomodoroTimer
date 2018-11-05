@@ -25,9 +25,9 @@ public:
     void beginLongPause();
     void beginWork();
     void beginWorkInitial();
-    virtual void decide();
+    virtual QString decide();
 
-    qint64 getTaskTimeMs() const;
+    virtual qint64 getTaskTimeMs() const;
 };
 
 

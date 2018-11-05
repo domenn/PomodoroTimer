@@ -12,10 +12,18 @@ class stopwatch : public Session {
 
     PomodoroState state;
 
+    qint64 start_time;
+    qint64 pause_start_time;
+    qint64 total_pause;
+    qint64 pause_display_timestamp;
+
 public:
     stopwatch();
 
-    void decide() override;
+
+    qint64 getTaskTimeMs() const override;
+
+    QString decide() override;
 };
 
 

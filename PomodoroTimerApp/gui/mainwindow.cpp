@@ -9,6 +9,11 @@
 #include <PomodoroTimerApp/utils/millisecondsToTimer.h>
 #include <QtCore/QCommandLineParser>
 #include <QApplication>
+#include <PomodoroTimerApp/stopwatch/stopwatch.h>
+#include <PomodoroTimerApp/logging/Logger.h>
+#include <QtCore/QStandardPaths>
+#include <QtCore/QDir>
+#include <QtCore/QThread>
 
 // #include "ui_mainwindow.h"
 
@@ -18,6 +23,11 @@
 //}
 
 MainWindow::MainWindow(QApplication * app) {
+
+
+    Logger::createDefaultLogger(this, getLogFilePath());
+
+    Logger::getDefaultLogger().write("Started the app");
 
     handleCommandLineArguments(app);
 
@@ -31,10 +41,12 @@ MainWindow::MainWindow(QApplication * app) {
     mainTimerLabel = createMainTimerLabel(mainLayout);
     createStartStopButtons(mainLayout);
 
-    createAdditionalInfoItems(mainLayout);
-
-
-    setWindowTitle(tr("Pomodoro Timer"));
+    if(!is_stopwatch_mode) {
+        createAdditionalInfoItems(mainLayout);
+        setWindowTitle(tr("Pomodoro Timer"));
+    }else{
+        setWindowTitle(tr("Stopwatch"));
+    }
 }
 
 void MainWindow::createMenu() {
@@ -132,9 +144,18 @@ void MainWindow::createAdditionalInfoItems(QVBoxLayout *pLayout) {
 }
 
 void MainWindow::fireButtonClickInitial() {
-    session.decide();
+
+    // REFACTOR: some better decision logic .. not if else everywhere.
+    if(!is_stopwatch_mode) {
+        session = new Session;
+    }else{
+        session = new stopwatch;
+    }
+
+    fireButtonClick();
     timer = new QTimer;
     QObject::connect(timer, &QTimer::timeout, this, &MainWindow::myTimerHandler);
+    QThread::msleep(80);
     timer->start(1000);  // 100 nanoseconds or 1 second interval
     QObject::disconnect (btnToInitial);
     // disconnect(fireButton, SIGNAL(released), 0, 0);
@@ -142,12 +163,21 @@ void MainWindow::fireButtonClickInitial() {
 }
 
 void MainWindow::myTimerHandler() {
-    auto stringTimeRepr = millisecondsToTimer::intervalToString(session.getTaskTimeMs());
+
+    // REFACTOR: the number should be command line parameter, or option
+    auto theNumber = session->getTaskTimeMs();
+    auto stringTimeRepr = millisecondsToTimer::intervalToString(theNumber);
+    if (tickCount++ >= 1800){
+        Logger::getDefaultLogger().write("Current timer status: " + stringTimeRepr);
+    }
+
+
     mainTimerLabel->setText(stringTimeRepr);
 }
 
 void MainWindow::fireButtonClick() {
-    session.decide();
+    auto txt = session->decide();
+    fireButton->setText(txt);
 }
 
 void MainWindow::handleCommandLineArguments(QApplication *application) {
@@ -161,4 +191,27 @@ void MainWindow::handleCommandLineArguments(QApplication *application) {
 
     is_stopwatch_mode = parser.isSet(stopwatchModeOption);
 
+}
+
+/**
+ * On linux returns path to: ~/.local/share/PomodoroTimer/log.txt
+ * Tested, working
+ * @return Mentioned path
+ */
+QString MainWindow::getLogFilePath() {
+    QString application_folder = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    QDir dir(application_folder);
+    if (!dir.exists())
+        dir.mkpath(application_folder);
+
+    auto filename = dir.absoluteFilePath("log.txt");
+    return filename;
+//    application_folder = dir.absoluteFilePath(id + ".limod");
+//    if (QFile::exists(application_folder))
+//        QFile::remove(application_folder);
+//
+//    if(QFile::copy(file_passed, application_folder))
+//        qDebug("copied");
+//    else
+//        qDebug("not copied");
 }
