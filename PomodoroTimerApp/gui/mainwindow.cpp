@@ -7,6 +7,8 @@
 #include <QtWidgets/QFormLayout>
 #include <QTimer>
 #include <PomodoroTimerApp/utils/millisecondsToTimer.h>
+#include <QtCore/QCommandLineParser>
+#include <QApplication>
 
 // #include "ui_mainwindow.h"
 
@@ -15,7 +17,10 @@
 //        ui(new Ui::MainWindow) {
 //}
 
-MainWindow::MainWindow() {
+MainWindow::MainWindow(QApplication * app) {
+
+    handleCommandLineArguments(app);
+
     createMenu();
 
     auto *mainLayout = new QVBoxLayout;
@@ -143,4 +148,17 @@ void MainWindow::myTimerHandler() {
 
 void MainWindow::fireButtonClick() {
     session.decide();
+}
+
+void MainWindow::handleCommandLineArguments(QApplication *application) {
+    QCommandLineParser parser;
+    parser.setApplicationDescription("Pomodoro timer and stopwatch");
+    parser.addHelpOption();
+    parser.addVersionOption();
+    QCommandLineOption stopwatchModeOption("stopwatch", QCoreApplication::translate("main", "Run as a simple stopwatch."));
+    parser.addOption(stopwatchModeOption);
+    parser.process(*application);
+
+    is_stopwatch_mode = parser.isSet(stopwatchModeOption);
+
 }

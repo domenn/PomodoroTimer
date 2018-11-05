@@ -17,8 +17,11 @@ class MainWindow : public QDialog {
     static constexpr const char*const buttonLabelStartLongPause = "Start long pause";
     static constexpr const char*const buttonLabelInterrupt = "Interrupt";
     static constexpr const char*const buttonLabelContinue = "Continue";
-
     static constexpr const char*const buttonLabelFinishSession = "Finish";
+
+    bool is_stopwatch_mode;
+    qint32  counter;
+    Session session;
 
     QMenuBar *menuBar;
     QMenu *fileMenu;
@@ -38,14 +41,12 @@ class MainWindow : public QDialog {
     QLabel* lLongPauses;
     QLabel* lCheatedTime;
     QTimer * timer;
-    qint32  counter;
     QMetaObject::Connection btnToInitial;
 
 
     void createMenu();
     QGridLayout * createGridWidgets();
 
-    Session session;
 
     QLabel * createMainTimerLabel(QLayout *targetGrid);
 
@@ -59,9 +60,10 @@ private slots:
     void myTimerHandler();
 
 public:
-    MainWindow();
+    explicit MainWindow(QApplication *);
 
 
+    void handleCommandLineArguments(QApplication *application);
 };
 
 #endif // MAINWINDOW_H

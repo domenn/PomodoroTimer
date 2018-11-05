@@ -10,6 +10,7 @@
 
 class Session {
 
+protected:
     Run* current_run{};
     std::vector <Run> run_history;
 
@@ -24,7 +25,7 @@ public:
     void beginLongPause();
     void beginWork();
     void beginWorkInitial();
-    void decide();
+    virtual void decide();
 
     qint64 getTaskTimeMs() const;
 };
