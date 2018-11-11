@@ -57,3 +57,15 @@ void Session::beginLongPause() {
 qint64 Session::getTaskTimeMs() const {
     return current_run->remainingTimeMs();
 }
+
+QString Session::reset() {
+    return "Not Implemented";
+}
+
+QString Session::saveState() {
+    return "Not Implemented";
+}
+
+void Session::restore(const QString &state) {
+
+}

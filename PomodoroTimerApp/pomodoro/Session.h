@@ -21,13 +21,20 @@ public:
 
     void interrupt();
     void resumeInterrupt();
-    void beginPause();
+
+    virtual void beginPause();
     void beginLongPause();
     void beginWork();
     void beginWorkInitial();
     virtual QString decide();
 
     virtual qint64 getTaskTimeMs() const;
+
+    virtual QString reset();
+
+    virtual QString saveState();
+
+    virtual void restore(const QString &state);
 };
 
 

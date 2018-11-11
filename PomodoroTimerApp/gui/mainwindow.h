@@ -21,7 +21,7 @@ class MainWindow : public QDialog {
 
     bool is_stopwatch_mode;
     qint32  counter;
-    Session *session;
+    Session *session{};
 
     QMenuBar *menuBar;
     QMenu *fileMenu;
@@ -57,6 +57,7 @@ class MainWindow : public QDialog {
 private slots:
     void fireButtonClickInitial();
     void fireButtonClick();
+    void finishButtonClick();
     void myTimerHandler();
 
 public:
@@ -68,6 +69,11 @@ public:
     QString getLogFilePath();
 
     int tickCount = 0;
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
+    void initializeStopwatch();
 };
 
 #endif // MAINWINDOW_H

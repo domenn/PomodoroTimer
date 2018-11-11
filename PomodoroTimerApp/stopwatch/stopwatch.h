@@ -24,6 +24,14 @@ public:
     qint64 getTaskTimeMs() const override;
 
     QString decide() override;
+
+    QString reset() override;
+
+    QString saveState() override;
+
+    void restore(const QString &state) override;
+
+    void beginPause() override;
 };
 
 
