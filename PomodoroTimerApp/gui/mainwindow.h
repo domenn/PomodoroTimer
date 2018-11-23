@@ -21,9 +21,10 @@ class MainWindow : public QDialog {
     static constexpr const char*const buttonLabelContinue = "Continue";
     static constexpr const char*const buttonLabelFinishSession = "Finish";
 
+	// IMPORTANT: DO NOT CHANGE ORDER OF VARIABLES
+	PomodoroAppCommandLine cmdLine;
     ApplicationMode applicationMode;
     MainWindowGuiBuilder guiBuilder;
-    PomodoroAppCommandLine cmdLine;
 
     ApplicationMode figureOutAppMode();
     Application application;

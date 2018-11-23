@@ -7,9 +7,11 @@
 #include "ApplicationMode.h"
 
 class Application {
-    Session* const session;
+	Session* const session;
 
 public:
-    Application(ApplicationMode const & applicationMode);
+	Application(ApplicationMode const & applicationMode);
+	void start();
+	long long getMainTimerValue();
 
 };

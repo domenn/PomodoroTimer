@@ -4,7 +4,6 @@
 
 #include "PomodoroAppCommandLine.h"
 #include <QApplication>
-#include <c++/8.2.0/bits/move.h>
 
 QCommandLineParser * PomodoroAppCommandLine::handleCommandLineArguments(QApplication *application) {
     auto * parser = new QCommandLineParser;

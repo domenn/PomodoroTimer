@@ -31,6 +31,11 @@ set(CMAKE_AUTOUIC ON)
 #include_directories(${source_dir}/include)
 
 # Find the QtWidgets library
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+	set (CMAKE_PREFIX_PATH "C:\\Qt\\5.11.2\\msvc2017_64\\")
+endif ()
+
 find_package(Qt5Widgets CONFIG REQUIRED)
 
 # Populate a CMake variable with the sources

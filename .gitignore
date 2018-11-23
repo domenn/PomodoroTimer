@@ -153,3 +153,4 @@ CMakeLists.txt.user*
 /.idea/modules.xml
 /.idea/vcs.xml
 /.idea/codeStyles/
+/.vs/

@@ -5,22 +5,32 @@
 #ifndef POMODOROTIMER_SESSION_H
 #define POMODOROTIMER_SESSION_H
 
+#include <QtCore>
+
 #include <vector>
-#include "PomodoroTimerApp/pomodoro/Run.h"
 #include "ApplicationMode.h"
 
 class Session {
-
 protected:
-    Run* current_run{};
-    std::vector <Run> run_history;
+	qint64 current_phase_start_timestamp;
+	qint64 work_start_timestamp;
 
 
 public:
 
     Session();
 
-    void interrupt();
+	/**
+	 * Resets values to zero and starts the timer. Shall be used when starting the timer for the first time.
+	*/
+	virtual void initialize() = 0;
+
+	/**
+	* Returns the main timer in ms. For Pomodoro timer this is the current timer.
+	*/
+	virtual qint64 getMainTimerValue() = 0;
+
+    /*void interrupt();
     void resumeInterrupt();
 
     virtual void beginPause();
@@ -31,11 +41,19 @@ public:
 
     virtual qint64 getTaskTimeMs() const;
 
-    virtual QString reset();
+    virtual QString reset();*/
 
-    virtual QString saveState();
 
-    virtual void restore(const QString &state);
+	/**
+	 * Returns JSON string that can be used to save state before exit.
+	 */
+    virtual QString saveState() = 0;
+
+	/**
+	 * Restores the session after reopening the app.
+	 * @param state the state in JSON format
+	*/
+    virtual void restore(const QString &state) = 0;
 
     /**
      * Returns raw pointer to heap .. Can cause memory leak, but is only used once.

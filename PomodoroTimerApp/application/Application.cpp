@@ -7,3 +7,13 @@
 Application::Application(ApplicationMode const &applicationMode)
     : session(Session::create(applicationMode))
 {}
+
+void Application::start()
+{
+	session->initialize();
+}
+
+long long Application::getMainTimerValue()
+{
+	return session->getMainTimerValue();
+}

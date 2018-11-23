@@ -4,10 +4,13 @@
 #include <QApplication>
 #include <QPushButton>
 #include <QThread>
+#include <QLabel>
+
 #include <plog/Log.h>
 #include <plog/Appenders/ConsoleAppender.h>
 
 #include "PomodoroTimerApp/utils/app_directories.h"
+#include <PomodoroTimerApp/utils/millisecondsToTimer.h>
 
 MainWindow::MainWindow(QApplication *app) : QDialog(nullptr,
                                                     Qt::Window |
@@ -26,7 +29,6 @@ MainWindow::MainWindow(QApplication *app) : QDialog(nullptr,
     plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender);
 
     LOG_INFO << "App starting";
-
     guiBuilder.build();
 
 }
@@ -34,13 +36,13 @@ MainWindow::MainWindow(QApplication *app) : QDialog(nullptr,
 void MainWindow::myTimerHandler() {
 
 //    // REFACTOR: the number should be command line parameter, or option
-//    auto theNumber = session->getTaskTimeMs();
-//    auto stringTimeRepr = millisecondsToTimer::intervalToString(theNumber);
+	auto theNumber = application.getMainTimerValue();
+    auto stringTimeRepr = millisecondsToTimer::intervalToString(theNumber);
 //    if (tickCount++ >= 1800) {
 //        Logger::getDefaultLogger().write("Current timer status: " + stringTimeRepr);
 //    }
 //
-//    mainTimerLabel->setText(stringTimeRepr);
+    guiBuilder.getMainTimerLabel()->setText(stringTimeRepr);
 }
 
 void MainWindow::finishButtonClick() {
@@ -85,6 +87,8 @@ ApplicationMode MainWindow::figureOutAppMode() {
 void MainWindow::fireButtonClickInitial() {
 
     // session = Session::create(applicationMode);
+
+	application.start();
 
     fireButtonClick();
     timer = new QTimer;

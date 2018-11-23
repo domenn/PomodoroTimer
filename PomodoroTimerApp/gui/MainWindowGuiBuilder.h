@@ -22,6 +22,7 @@ public:
 
     void changeFireBtnConnection();
     QPushButton * const getFireButton() const;
+	QLabel * const getMainTimerLabel() const;
     void initializeStopwatch();
 private:
     constexpr static int MAIN_BUTTONS_INNER_PADDING = 16;

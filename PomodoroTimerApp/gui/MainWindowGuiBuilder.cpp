@@ -110,6 +110,10 @@ QPushButton * const MainWindowGuiBuilder::getFireButton() const {
     return fireButton;
 }
 
+QLabel * const MainWindowGuiBuilder::getMainTimerLabel() const {
+    return mainTimerLabel;
+}
+
 void MainWindowGuiBuilder::initializeStopwatch() {
 
     mainWindow->setWindowTitle(QObject::tr("Stopwatch"));
