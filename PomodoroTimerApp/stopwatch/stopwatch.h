@@ -6,7 +6,7 @@
 #define POMODOROTIMER_STOPWATCH_H
 
 
-#include <PomodoroTimerApp/pomodoro/Session.h>
+#include <PomodoroTimerApp/application/Session.h>
 
 class stopwatch : public Session {
 

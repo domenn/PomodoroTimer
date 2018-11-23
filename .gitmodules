@@ -1,0 +1,6 @@
+[submodule "External/googletest"]
+	path = External/googletest
+	url = https://github.com/abseil/googletest.git
+[submodule "External/cpplogger"]
+	path = External/cpplogger
+	url = https://github.com/SergiusTheBest/plog.git

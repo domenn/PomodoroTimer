@@ -3,30 +3,54 @@ project(PomodoroTimer)
 
 set(CMAKE_CXX_STANDARD 17)
 
-
 # Find includes in corresponding build directories
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+# set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed
- set(CMAKE_AUTOMOC ON)
+include_directories(. External/cpplogger/include)
+set(CMAKE_AUTOMOC ON)
 # Create code from a list of Qt designer ui files
- set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOUIC ON)
+
+# The method below isn't very fast. I don't relly like.
+#include(ExternalProject)
+#ExternalProject_Add(
+#        cpplogger
+#        PREFIX cpplogger
+#        GIT_REPOSITORY https://github.com/SergiusTheBest/plog.git
+#        GIT_TAG tags/1.1.4
+#        CONFIGURE_COMMAND ""
+#        BUILD_COMMAND ""
+#        INSTALL_COMMAND ""
+#        SOURCE_DIR ${CMAKE_SOURCE_DIR}/External/cpplogger
+#        LOG_DOWNLOAD ON
+#)
+#add_dependencies(PomodoroTimer cpplogger)
+#
+#ExternalProject_Get_Property(cpplogger source_dir)
+#message("CppLogger sources at ${source_dir}")
+#include_directories(${source_dir}/include)
 
 # Find the QtWidgets library
 find_package(Qt5Widgets CONFIG REQUIRED)
 
 # Populate a CMake variable with the sources
-
 file(GLOB_RECURSE SOURCE_FILES
         ./PomodoroTimerApp/*.cpp
         ./PomodoroTimerApp/*.h
         )
 
+#message(WARNING "${SOURCE_FILES}")
+
+list(FILTER SOURCE_FILES EXCLUDE REGEX ".*main.cpp$")
+#message(WARNING "${SOURCE_FILES}")
 file(GLOB_RECURSE SOURCE_FILES1
         ./ExampleFromOnline/*.cpp
         ./ExampleFromOnline/*.h
         )
 
-add_executable(PomodoroTimer ${SOURCE_FILES})
+#add_subdirectory(./PomodoroTimerAppTest)
+
+add_executable(PomodoroTimer PomodoroTimerApp/main.cpp ${SOURCE_FILES})
 target_link_libraries(PomodoroTimer Qt5::Widgets)
 
 add_executable(ExampleFromOnline ${SOURCE_FILES1})

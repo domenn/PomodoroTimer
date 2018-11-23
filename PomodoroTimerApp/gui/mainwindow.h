@@ -1,13 +1,15 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
+#include "MainWindowGuiBuilder.h"
 
+#include <PomodoroTimerApp/utils/PomodoroAppCommandLine.h>
+#include <PomodoroTimerApp/application/Application.h>
 #include <QDialog>
-#include <QLabel>
-#include <QtWidgets/QGridLayout>
-#include <PomodoroTimerApp/pomodoro/Session.h>
+
+
 
 class QMenuBar;
 class QMenu;
+class QTimer;
 
 class MainWindow : public QDialog {
 
@@ -19,61 +21,23 @@ class MainWindow : public QDialog {
     static constexpr const char*const buttonLabelContinue = "Continue";
     static constexpr const char*const buttonLabelFinishSession = "Finish";
 
-    bool is_stopwatch_mode;
-    qint32  counter;
-    Session *session{};
+    ApplicationMode applicationMode;
+    MainWindowGuiBuilder guiBuilder;
+    PomodoroAppCommandLine cmdLine;
 
-    QMenuBar *menuBar;
-    QMenu *fileMenu;
-    QAction *exitAction;
-    QPushButton* fireButton;
-    QPushButton* endButton;
-
-    QLabel* mainTimerLabel;
-
-    QLabel* lTotalWork;
-    QLabel* lTotalPause;
-    QLabel* lTotalSessionTime;
-    QLabel* lTimeSinceSessionStart;
-    QLabel* lSessionStartAt;
-    QLabel* lPomodoriDone;
-    QLabel* lShortPauses;
-    QLabel* lLongPauses;
-    QLabel* lCheatedTime;
-    QTimer * timer;
-    QMetaObject::Connection btnToInitial;
-
-
-    void createMenu();
-    QGridLayout * createGridWidgets();
-
-
-    QLabel * createMainTimerLabel(QLayout *targetGrid);
-
-    void createStartStopButtons(QLayout *pLayout);
-
-    void createAdditionalInfoItems(QVBoxLayout *pLayout);
-
-private slots:
-    void fireButtonClickInitial();
-    void fireButtonClick();
-    void finishButtonClick();
-    void myTimerHandler();
-
-public:
-    explicit MainWindow(QApplication *);
-
-
-    void handleCommandLineArguments(QApplication *application);
-
-    QString getLogFilePath();
-
-    int tickCount = 0;
+    ApplicationMode figureOutAppMode();
+    Application application;
 
 protected:
     void closeEvent(QCloseEvent *event) override;
 
-    void initializeStopwatch();
-};
+public:
+    explicit MainWindow(QApplication *app);
 
-#endif // MAINWINDOW_H
+public slots:
+    void fireButtonClickInitial();
+    void fireButtonClick();
+    void finishButtonClick();
+    void myTimerHandler();
+    QTimer *timer;
+};
