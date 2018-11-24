@@ -15,5 +15,11 @@ void Application::start()
 
 long long Application::getMainTimerValue()
 {
-	return session->getMainTimerValue();
+    return session->getMainTimerValue();
 }
+
+QString Application::fireAction()
+{
+    return session->decide();
+}
+

@@ -3,7 +3,7 @@
 //
 
 #include "MainWindowGuiBuilder.h"
-#include "mainwindow.h"
+#include "main_window.h"
 
 
 #include <QMenuBar>

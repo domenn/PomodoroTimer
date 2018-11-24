@@ -3,33 +3,86 @@
 //
 
 #include "PomodoroSession.h"
+#include <PomodoroTimerApp/utils/mockable_datetime.h>
 
-void PomodoroSession::startNewPomodoro()
-{
-	current_phase_start_timestamp = QDateTime::currentMSecsSinceEpoch();
+void PomodoroSession::startNewPomodoro() {
+    current_phase_start_timestamp = dt::currentTimeMs();
+    state = PomodoroState::WORK;
+
+    pomodori_.emplace_back(current_phase_start_timestamp,
+            (sessionsForBigPause == LONG_BREAK_NUMBER - 1) ? TIME_LONG_PAUSE : TIME_PAUSE);
+    current_pomodoro_ = &pomodori_.back();
 }
 
-void PomodoroSession::initialize()
-{
-	work_start_timestamp = QDateTime::currentMSecsSinceEpoch();
-	startNewPomodoro();
+void PomodoroSession::initialize() {
+
+    timeForTask[PomodoroState::PAUSE] = TIME_PAUSE;
+    timeForTask[PomodoroState::WORK] = TIME_WORK;
+    timeForTask[PomodoroState::LONG_PAUSE] = TIME_LONG_PAUSE;
+    // Interrupted is basically work, so planned time is same
+    timeForTask[PomodoroState::INTERRUPTED] = timeForTask[PomodoroState::WORK];
+
+    work_start_timestamp = dt::currentTimeMs();
+    startNewPomodoro();
 }
 
-qint64 PomodoroSession::getMainTimerValue()
-{
-	// We have phase .. start time for phase. We use currentTime - startTime. That gives elapsed.
-	// I do predicted - elapsed to get the timer.
-	
-	// TODO: Currently hardcoded for the work mode. Should add decision for other .. pause and stuff.
+qint64 PomodoroSession::getMainTimerValue() {
+    auto elapsed = state != PomodoroState::INTERRUPTED ? current_pomodoro_->get_time_of_kind(state, true)
+            : current_pomodoro_->get_time_of_kind(PomodoroState::WORK);
 
-	auto timeForTask = QDateTime::currentMSecsSinceEpoch() - current_phase_start_timestamp;
-	return TIME_WORK - timeForTask;
+    return this->timeForTask[state] - elapsed;
 }
 
 QString PomodoroSession::saveState() {
     return QString();
 }
 
-void PomodoroSession::restore(const QString &state) {
+void PomodoroSession::restore(const QString& state) {
 
 }
+
+QString PomodoroSession::decide() {
+    auto actual_current_phase_start_ts = current_phase_start_timestamp;
+    current_pomodoro_->add_time_of_kind(state, current_phase_start_timestamp - actual_current_phase_start_ts);
+    if (timerExpired()) {
+        current_phase_start_timestamp = dt::currentTimeMs();
+        switch (state) {
+        case PomodoroState::WORK: return selectPause();
+        case PomodoroState::LONG_PAUSE:
+        case PomodoroState::PAUSE: startNewPomodoro();
+            return "Pause";
+        default:
+            throw std::logic_error(
+                    "Invalid state: timerExpired() is true and pomodoroState is INTERRUPTED. This is not allowed.");
+        }
+    }
+
+    current_phase_start_timestamp = dt::currentTimeMs();
+    current_pomodoro_->add_time_of_kind(state, current_phase_start_timestamp - actual_current_phase_start_ts);
+    if (state == PomodoroState::INTERRUPTED) {
+        state = PomodoroState::WORK;
+        return "Resume";
+    }
+    else { // if (state == PomodoroState::WORK) {
+        state = PomodoroState::INTERRUPTED;
+        return "Interrupt";
+    }
+}
+
+bool PomodoroSession::timerExpired() {
+    return getMainTimerValue() < 0;
+}
+
+QString PomodoroSession::selectPause() {
+    ++sessionsForBigPause;
+    current_phase_start_timestamp = dt::currentTimeMs();
+    if (sessionsForBigPause >= LONG_BREAK_NUMBER) {
+        sessionsForBigPause = 0;
+        state = PomodoroState::LONG_PAUSE;
+    }
+    else {
+        state = PomodoroState::PAUSE;
+    }
+    return "Start Work";
+}
+

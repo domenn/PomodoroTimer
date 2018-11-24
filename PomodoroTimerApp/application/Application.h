@@ -14,4 +14,5 @@ public:
 	void start();
 	long long getMainTimerValue();
 
+    QString fireAction();
 };

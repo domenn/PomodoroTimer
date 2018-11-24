@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "main_window.h"
 
 #include <QTimer>
 #include <QApplication>
@@ -38,10 +38,7 @@ void MainWindow::myTimerHandler() {
 //    // REFACTOR: the number should be command line parameter, or option
 	auto theNumber = application.getMainTimerValue();
     auto stringTimeRepr = millisecondsToTimer::intervalToString(theNumber);
-//    if (tickCount++ >= 1800) {
-//        Logger::getDefaultLogger().write("Current timer status: " + stringTimeRepr);
-//    }
-//
+
     guiBuilder.getMainTimerLabel()->setText(stringTimeRepr);
 }
 
@@ -76,14 +73,6 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 }
 
 
-
-ApplicationMode MainWindow::figureOutAppMode() {
-    if (cmdLine.isStopwatchMode) {
-        return ApplicationMode::STOPWATCH;
-    }
-    return ApplicationMode::POMODORO_TIMER;
-}
-
 void MainWindow::fireButtonClickInitial() {
 
     // session = Session::create(applicationMode);
@@ -99,5 +88,12 @@ void MainWindow::fireButtonClickInitial() {
 }
 
 void MainWindow::fireButtonClick() {
-    guiBuilder.getFireButton()->setText("NotImplemented");
+    application.fireAction();
+}
+
+ApplicationMode MainWindow::figureOutAppMode() {
+    if (cmdLine.isStopwatchMode) {
+        return ApplicationMode::STOPWATCH;
+    }
+    return ApplicationMode::POMODORO_TIMER;
 }

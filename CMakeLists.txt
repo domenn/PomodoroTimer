@@ -33,7 +33,7 @@ set(CMAKE_AUTOUIC ON)
 # Find the QtWidgets library
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-	set (CMAKE_PREFIX_PATH "C:\\Qt\\5.11.2\\msvc2017_64\\")
+    set(CMAKE_PREFIX_PATH "C:\\Qt\\5.11.2\\msvc2017_64\\")
 endif ()
 
 find_package(Qt5Widgets CONFIG REQUIRED)
@@ -48,15 +48,8 @@ file(GLOB_RECURSE SOURCE_FILES
 
 list(FILTER SOURCE_FILES EXCLUDE REGEX ".*main.cpp$")
 #message(WARNING "${SOURCE_FILES}")
-file(GLOB_RECURSE SOURCE_FILES1
-        ./ExampleFromOnline/*.cpp
-        ./ExampleFromOnline/*.h
-        )
 
-#add_subdirectory(./PomodoroTimerAppTest)
+add_subdirectory(./PomodoroTimerAppTest)
 
 add_executable(PomodoroTimer PomodoroTimerApp/main.cpp ${SOURCE_FILES})
 target_link_libraries(PomodoroTimer Qt5::Widgets)
-
-add_executable(ExampleFromOnline ${SOURCE_FILES1})
-target_link_libraries(ExampleFromOnline Qt5::Widgets)

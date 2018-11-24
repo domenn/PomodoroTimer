@@ -9,7 +9,7 @@
 //QString stopwatch::decide() {
 //    // REFACTOR better return value handling
 //    if (state == PomodoroState::PAUSE) {
-//        total_pause += (QDateTime::currentMSecsSinceEpoch() - pause_start_time);
+//        total_pause += (dt::currentTimeMs() - pause_start_time);
 //        state = PomodoroState::WORK;
 //        return "Pause";
 //    } else {
@@ -20,12 +20,12 @@
 //
 //stopwatch::stopwatch() : state(PomodoroState::PAUSE),
 //                         total_pause(0),
-//                         start_time(QDateTime::currentMSecsSinceEpoch()),
-//                         pause_start_time(QDateTime::currentMSecsSinceEpoch()) {}
+//                         start_time(dt::currentTimeMs()),
+//                         pause_start_time(dt::currentTimeMs()) {}
 //
 //qint64 stopwatch::getTaskTimeMs() const {
 //    if (state == PomodoroState::WORK) {
-//        return QDateTime::currentMSecsSinceEpoch() - start_time - total_pause;
+//        return dt::currentTimeMs() - start_time - total_pause;
 //    } else {
 //        return pause_display_timestamp;
 //    }
@@ -33,7 +33,7 @@
 //
 //QString stopwatch::reset() {
 //    state = PomodoroState::PAUSE;
-//    start_time = QDateTime::currentMSecsSinceEpoch();
+//    start_time = dt::currentTimeMs();
 //    total_pause = 0;
 //    pause_display_timestamp = 0;
 //    pause_start_time = start_time;
@@ -70,6 +70,6 @@
 //
 //void stopwatch::beginPause() {
 //    pause_display_timestamp = getTaskTimeMs();
-//    pause_start_time = QDateTime::currentMSecsSinceEpoch();
+//    pause_start_time = dt::currentTimeMs();
 //    state = PomodoroState::PAUSE;
 //}

@@ -17,9 +17,6 @@ protected:
 
 
 public:
-
-    Session();
-
 	/**
 	 * Resets values to zero and starts the timer. Shall be used when starting the timer for the first time.
 	*/
@@ -61,6 +58,12 @@ public:
      * @return Pointer to session on heap. Can be freed with delete.
      */
     static Session *const create(const ApplicationMode &mode);
+
+    /**
+     * The function is basically play/pause handler. Decides what to do: play, pause, and if pause, decides which thing to pause. Returns string for a button.
+     * @return String that represents state, should be written to button.
+     */
+    virtual QString decide() = 0;
 };
 
 
