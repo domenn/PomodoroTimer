@@ -17,6 +17,10 @@ namespace con{
     inline QTime as_qtime(qint64 msecs){
         return QTime::fromMSecsSinceStartOfDay(static_cast<int>(msecs));
     }
+
+    inline qint64 min_to_ms(qint64 mins){
+        return mins*60*1000;
+    }
 };
 
 

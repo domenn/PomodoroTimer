@@ -6,12 +6,22 @@
 #include <PomodoroTimerApp/pomodoro/PomodoroSession.h>
 #include "Session.h"
 
-Session *const Session::create(const ApplicationMode &mode) {
+template <typename settings_type>
+Session* const Session::create(const ApplicationMode& mode, settings_type const * const settings_structure) {
 	switch (mode) {
-		case ApplicationMode::POMODORO_TIMER:
+	case ApplicationMode::POMODORO_TIMER:
+		if (settings_structure != nullptr) {
+			return new PomodoroSession(*settings_structure);
+		} else {
 			return new PomodoroSession;
-	//	case ApplicationMode::STOPWATCH:
-		default:
-			throw std::logic_error("Stopwatch mode not implemented");
+		}
+
+		//	case ApplicationMode::STOPWATCH:
+	default:
+		throw std::logic_error("Stopwatch mode not implemented");
 	}
+}
+
+Session* const Session::create(const ApplicationMode& mode) {
+	return create<PomodoroSessionSettings>(mode, nullptr);
 }

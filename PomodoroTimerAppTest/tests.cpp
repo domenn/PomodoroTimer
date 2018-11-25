@@ -5,6 +5,7 @@
 
 #include "test_cmdline_parser.h"
 #include "test_main_timer_values.h"
+#include "test_pomodoro_session_misc.h"
 #include "test_total_elapsed_times.h"
 #include "test_pomodoro.h"
 

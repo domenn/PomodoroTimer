@@ -12,6 +12,7 @@
 #include "PomodoroTimerApp/utils/app_directories.h"
 #include <PomodoroTimerApp/utils/millisecondsToTimer.h>
 #include <PomodoroTimerApp/application/Session.h>
+#include <PomodoroTimerApp/pomodoro/PomodoroSession.h>
 
 MainWindow::MainWindow(QApplication *app) : QDialog(nullptr,
                                                     Qt::Window |

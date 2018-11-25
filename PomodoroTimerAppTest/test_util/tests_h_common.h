@@ -11,3 +11,6 @@
 // #include "app_manip.h"
 
 #include "make_application.h"
+#include "common_checks.h"
+
+typedef PomodoroState eps;

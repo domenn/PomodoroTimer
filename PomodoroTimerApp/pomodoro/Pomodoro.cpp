@@ -27,9 +27,13 @@ qint64 Pomodoro::get_total_time(const bool return_stored_only) const {
 }
 
 qint64 Pomodoro::get_time_of_kind(const PomodoroState what_kind, const bool is_current_state) const {
+    return get_time_of_kind(what_kind, dt::currentTimeMs(), is_current_state);
+}
+
+qint64 Pomodoro::get_time_of_kind(PomodoroState what_kind, qint64 current_timestamp, bool is_current_state) const {
     auto current_state_time = *(map_.at(what_kind));
     if (is_current_state) {
-        auto total_elapsed_time = dt::currentTimeMs() - start_timestamp_;
+        auto total_elapsed_time = current_timestamp - start_timestamp_;
         auto not_stored_time = total_elapsed_time - get_total_time(true);
         return not_stored_time + current_state_time;
     }

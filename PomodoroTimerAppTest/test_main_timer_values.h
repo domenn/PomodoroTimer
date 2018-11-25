@@ -17,13 +17,13 @@ TEST(timeMocks, correct){
 
 TEST(timersCorrect, startsAt25Minutes) {
     MockDateTime::setTime();
-    auto& app = (*mk::pomodoroTimerApp());
+    auto& app = (*mk::pomodoro_timer_app());
     auto timer = app.getMainTimerValue();
     ASSERT_EQ(con::as_minutes(timer), 25);
 }
 
 TEST(timersCorrect, countdownCorrect) {
-    auto& app = (*mk::pomodoroTimerApp());
+    auto& app = (*mk::pomodoro_timer_app());
     MockDateTime::addMinutes(5);
     ASSERT_EQ(con::as_minutes(app.getMainTimerValue()), 20);
     MockDateTime::addSeconds(12);
@@ -33,13 +33,9 @@ TEST(timersCorrect, countdownCorrect) {
     ASSERT_EQ(t1, t2);
 }
 
-
-#ifdef TESTS_THAT_FAIL
-
 TEST(switchCorrect, correctlySwitchesToPauseAndLongPause) {
-    auto& app = (*mk::pomodoroTimerApp());
+    auto& app = (*mk::pomodoro_timer_app());
     MockDateTime::addMinutes(25);
-    MockDateTime::addMs(1);
     // Timer is now below 0. FireAction should start the pause
     app.fireAction();
     // Pause is active, that means we have 5 minutes
@@ -51,7 +47,7 @@ TEST(switchCorrect, correctlySwitchesToPauseAndLongPause) {
     /*
      * Session 0 is first .. session 4 is fourth, must have extended pause.
      */
-    auto& app1 = (*mk::pomodoroTimerApp());
+    auto& app1 = (*mk::pomodoro_timer_app());
     int activeSession = 0;
     for (int i = 0; i<3; ++i) {
         MockDateTime::addMinutes(26);
@@ -99,7 +95,7 @@ TEST(switchCorrect, correctlySwitchesToPauseAndLongPause) {
     ASSERT_EQ(con::as_minutes(app1.getMainTimerValue()), 5);
 }
 
-
+#ifdef TESTS_THAT_FAIL
 TEST(canInterruptWork, mainTimerDoesntChange) {
     auto& app = (*mk::pomodoroTimerApp());
     am::advance_mins_and_test(&app, 4, 21);
