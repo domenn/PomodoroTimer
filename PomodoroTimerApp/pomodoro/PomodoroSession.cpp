@@ -15,13 +15,6 @@ void PomodoroSession::startNewPomodoro() {
 }
 
 void PomodoroSession::initialize() {
-
-    timeForTask[PomodoroState::PAUSE] = TIME_PAUSE;
-    timeForTask[PomodoroState::WORK] = TIME_WORK;
-    timeForTask[PomodoroState::LONG_PAUSE] = TIME_LONG_PAUSE;
-    // Interrupted is basically work, so planned time is same
-    timeForTask[PomodoroState::INTERRUPTED] = timeForTask[PomodoroState::WORK];
-
     work_start_timestamp = dt::currentTimeMs();
     startNewPomodoro();
 }
@@ -30,7 +23,7 @@ qint64 PomodoroSession::getMainTimerValue() {
     auto elapsed = state != PomodoroState::INTERRUPTED ? current_pomodoro_->get_time_of_kind(state, true)
             : current_pomodoro_->get_time_of_kind(PomodoroState::WORK);
 
-    return this->timeForTask[state] - elapsed;
+    return this->timeForTask.at(state) - elapsed;
 }
 
 QString PomodoroSession::saveState() {
@@ -41,7 +34,7 @@ void PomodoroSession::restore(const QString& state) {
 
 }
 
-QString PomodoroSession::decide() {
+QString PomodoroSession::fireAction() {
     auto actual_current_phase_start_ts = current_phase_start_timestamp;
     current_pomodoro_->add_time_of_kind(state, current_phase_start_timestamp - actual_current_phase_start_ts);
     if (timerExpired()) {
@@ -85,4 +78,11 @@ QString PomodoroSession::selectPause() {
     }
     return "Start Work";
 }
+
+PomodoroSession::PomodoroSession()
+        :timeForTask({{PomodoroState::PAUSE, TIME_PAUSE},
+        { PomodoroState::WORK, TIME_WORK },
+        { PomodoroState::LONG_PAUSE, TIME_LONG_PAUSE },
+        // Interrupted is basically work, so planned time is same
+        { PomodoroState::INTERRUPTED, TIME_WORK }}) { }
 

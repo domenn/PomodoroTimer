@@ -6,7 +6,7 @@
 //#include <QJsonDocument>
 //#include "stopwatch.h"
 //
-//QString stopwatch::decide() {
+//QString stopwatch::fireAction() {
 //    // REFACTOR better return value handling
 //    if (state == PomodoroState::PAUSE) {
 //        total_pause += (dt::currentTimeMs() - pause_start_time);
@@ -42,7 +42,7 @@
 //
 //QString stopwatch::saveState() {
 //    if (state == PomodoroState::WORK) {
-//        decide();
+//        fireAction();
 //    }
 //    if (getTaskTimeMs() == 0) {
 //        return {};
@@ -57,8 +57,8 @@
 //void stopwatch::restore(const QString &state) {
 //
 //    this->state = PomodoroState::PAUSE;
-//    decide();
-//    decide();
+//    fireAction();
+//    fireAction();
 //
 //    QJsonDocument doc = QJsonDocument::fromJson(state.toUtf8());
 //    const QJsonObject &obj = doc.object();

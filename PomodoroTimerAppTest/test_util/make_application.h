@@ -3,12 +3,14 @@
 //
 
 #pragma once
+#include <PomodoroTimerApp/pomodoro/PomodoroSession.h>
+#include "tests_h_common.h"
 
 namespace mk {
-    inline Application* pomodoroTimerApp(bool start = true) {
-        Application * app = new  Application(ApplicationMode::POMODORO_TIMER);
+    inline PomodoroSession* pomodoroTimerApp(bool start = true) {
+        PomodoroSession * app = (PomodoroSession*) Session::create (ApplicationMode::POMODORO_TIMER);
         if (start) {
-            app->start();
+            app->initialize();
         }
         return app;
     }

@@ -11,6 +11,7 @@
 
 #include "PomodoroTimerApp/utils/app_directories.h"
 #include <PomodoroTimerApp/utils/millisecondsToTimer.h>
+#include <PomodoroTimerApp/application/Session.h>
 
 MainWindow::MainWindow(QApplication *app) : QDialog(nullptr,
                                                     Qt::Window |
@@ -21,7 +22,7 @@ MainWindow::MainWindow(QApplication *app) : QDialog(nullptr,
                                             cmdLine(app),
                                             applicationMode(figureOutAppMode()),
                                             guiBuilder(applicationMode, this),
-                                            application(applicationMode){
+                                            session(Session::create(applicationMode)){
 
     static plog::RollingFileAppender<plog::TxtFormatter> fileAppender(app_directories::getDefaultLogFilePath().toStdString().c_str(), 8000, 2); // Create the 1st appender.
     static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender; // Create the 2nd appender.
@@ -36,7 +37,7 @@ MainWindow::MainWindow(QApplication *app) : QDialog(nullptr,
 void MainWindow::myTimerHandler() {
 
 //    // REFACTOR: the number should be command line parameter, or option
-	auto theNumber = application.getMainTimerValue();
+	auto theNumber = session->getMainTimerValue();
     auto stringTimeRepr = millisecondsToTimer::intervalToString(theNumber);
 
     guiBuilder.getMainTimerLabel()->setText(stringTimeRepr);
@@ -77,7 +78,7 @@ void MainWindow::fireButtonClickInitial() {
 
     // session = Session::create(applicationMode);
 
-	application.start();
+    session->initialize();
 
     fireButtonClick();
     timer = new QTimer;
@@ -88,7 +89,7 @@ void MainWindow::fireButtonClickInitial() {
 }
 
 void MainWindow::fireButtonClick() {
-    application.fireAction();
+    session->fireAction();
 }
 
 ApplicationMode MainWindow::figureOutAppMode() {

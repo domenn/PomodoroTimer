@@ -34,7 +34,7 @@ public:
     void beginLongPause();
     void beginWork();
     void beginWorkInitial();
-    virtual QString decide();
+    virtual QString fireAction();
 
     virtual qint64 getTaskTimeMs() const;
 
@@ -63,7 +63,7 @@ public:
      * The function is basically play/pause handler. Decides what to do: play, pause, and if pause, decides which thing to pause. Returns string for a button.
      * @return String that represents state, should be written to button.
      */
-    virtual QString decide() = 0;
+    virtual QString fireAction() = 0;
 };
 
 

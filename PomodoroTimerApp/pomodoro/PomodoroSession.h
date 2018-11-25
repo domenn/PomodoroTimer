@@ -20,7 +20,7 @@ class PomodoroSession : public Session {
 	// Inherited: qint64 work_start_timestamp;
     PomodoroState state;
     qint8 sessionsForBigPause = 0;
-	std::map<PomodoroState, qint64> timeForTask;
+	const std::map<PomodoroState, qint64> timeForTask;
 	std::vector<Pomodoro> pomodori_;
     Pomodoro* current_pomodoro_;
 
@@ -30,11 +30,12 @@ class PomodoroSession : public Session {
 	QString selectPause();
 
 public:
+	PomodoroSession();
 	void initialize() override;
 	qint64 getMainTimerValue() override;
 	QString saveState() override;
 	void restore(const QString &state) override;
-    QString decide() override;
+    QString fireAction() override;
 };
 
 

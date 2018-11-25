@@ -25,7 +25,7 @@ class stopwatch {
 //
 //    qint64 getTaskTimeMs() const override;
 //
-//    QString decide() override;
+//    QString fireAction() override;
 //
 //    QString reset() override;
 //

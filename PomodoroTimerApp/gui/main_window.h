@@ -2,7 +2,6 @@
 #include "MainWindowGuiBuilder.h"
 
 #include <PomodoroTimerApp/utils/PomodoroAppCommandLine.h>
-#include <PomodoroTimerApp/application/Application.h>
 #include <QDialog>
 
 
@@ -10,6 +9,7 @@
 class QMenuBar;
 class QMenu;
 class QTimer;
+class Session;
 
 class MainWindow : public QDialog {
 
@@ -25,9 +25,10 @@ class MainWindow : public QDialog {
 	PomodoroAppCommandLine cmdLine;
     ApplicationMode applicationMode;
     MainWindowGuiBuilder guiBuilder;
+	Session* const session;
 
     ApplicationMode figureOutAppMode();
-    Application application;
+
 
 protected:
     void closeEvent(QCloseEvent *event) override;

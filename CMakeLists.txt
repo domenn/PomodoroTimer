@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 include_directories(. External/cpplogger/include)
 set(CMAKE_AUTOMOC ON)
 # Create code from a list of Qt designer ui files
-set(CMAKE_AUTOUIC ON)
+# set(CMAKE_AUTOUIC ON)
 
 # The method below isn't very fast. I don't relly like.
 #include(ExternalProject)
