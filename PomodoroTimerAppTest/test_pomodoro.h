@@ -12,9 +12,6 @@
 #include <PomodoroTimerApp/utils/date_format_converter.h>
 #include <PomodoroTimerApp/pomodoro/Pomodoro.h>
 
-/**
- * Tests if we can correctly add to time and
- */
 TEST(pomodoro, canGetAndSetTimes) {
     constexpr qint64 TP = 1000;
     constexpr qint64 TLP = 2000;

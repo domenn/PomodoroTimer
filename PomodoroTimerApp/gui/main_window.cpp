@@ -38,7 +38,7 @@ MainWindow::MainWindow(QApplication *app) : QDialog(nullptr,
 void MainWindow::myTimerHandler() {
 
 //    // REFACTOR: the number should be command line parameter, or option
-	auto theNumber = session->getMainTimerValue();
+	auto theNumber = session->get_main_timer_value();
     auto stringTimeRepr = millisecondsToTimer::intervalToString(theNumber);
 
     guiBuilder.getMainTimerLabel()->setText(stringTimeRepr);

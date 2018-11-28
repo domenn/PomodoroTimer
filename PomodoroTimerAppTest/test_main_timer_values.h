@@ -18,30 +18,30 @@ TEST(timeMocks, correct){
 TEST(timersCorrect, startsAt25Minutes) {
     MockDateTime::setTime();
     auto& app = (*mk::pomodoro_timer_app());
-    auto timer = app.getMainTimerValue();
+    auto timer = app.get_main_timer_value();
     ASSERT_EQ(con::as_minutes(timer), 25);
 }
 
 TEST(timersCorrect, countdownCorrect) {
     auto& app = (*mk::pomodoro_timer_app());
     MockDateTime::addMinutes(5);
-    ASSERT_EQ(con::as_minutes(app.getMainTimerValue()), 20);
+    ASSERT_EQ(con::as_minutes(app.get_main_timer_value()), 20);
     MockDateTime::addSeconds(12);
     ASSERT_EQ(QTime(0, 19, 48), QTime(0, 19, 48));
-    auto t1 = con::as_qtime(app.getMainTimerValue());
+    auto t1 = con::as_qtime(app.get_main_timer_value());
     auto t2 = QTime(0, 19, 48);
     ASSERT_EQ(t1, t2);
 }
 
-TEST(switchCorrect, correctlySwitchesToPauseAndLongPause) {
+TEST(timersCorrect, correctTimersInPauseAndLongPause) {
     auto& app = (*mk::pomodoro_timer_app());
     MockDateTime::addMinutes(25);
     // Timer is now below 0. FireAction should start the pause
     app.fireAction();
     // Pause is active, that means we have 5 minutes
-    ASSERT_EQ(con::as_minutes(app.getMainTimerValue()), 5);
+    ASSERT_EQ(con::as_minutes(app.get_main_timer_value()), 5);
     MockDateTime::addMinutes(6);
-    ASSERT_EQ(con::as_minutes(app.getMainTimerValue()), -1);
+    ASSERT_EQ(con::as_minutes(app.get_main_timer_value()), -1);
     delete &app;
 
     /*
@@ -62,21 +62,22 @@ TEST(switchCorrect, correctlySwitchesToPauseAndLongPause) {
     MockDateTime::addMinutes(26);
     app1.fireAction();
 
-    auto appMinutes = con::as_minutes(app1.getMainTimerValue());
+    auto appMinutes = con::as_minutes(app1.get_main_timer_value());
+    // Now in long pause, timer should be at 15 minutes
     ASSERT_EQ(appMinutes, 15);
     // Expire some time
     MockDateTime::add_min_sec_ms(10,41,711);
     QTime expectedTime(0, 4, 18, (1000-711));
-    auto actualTime = con::as_qtime(app1.getMainTimerValue());
+    auto actualTime = con::as_qtime(app1.get_main_timer_value());
     ASSERT_EQ(expectedTime, actualTime);
     MockDateTime::addMinutes(5);
     app1.fireAction();
     // Now should be in new work session after long pause.
-    ASSERT_EQ(con::as_minutes(app1.getMainTimerValue()), 25);
+    ASSERT_EQ(con::as_minutes(app1.get_main_timer_value()), 25);
     MockDateTime::addMinutes(26);
     app1.fireAction();
     // Entered first 5 minute pause
-    ASSERT_EQ(con::as_minutes(app1.getMainTimerValue()), 5);
+    ASSERT_EQ(con::as_minutes(app1.get_main_timer_value()), 5);
     for (int i = 0; i<3; ++i) {
         MockDateTime::addMinutes(6);
         app1.fireAction();
@@ -84,30 +85,15 @@ TEST(switchCorrect, correctlySwitchesToPauseAndLongPause) {
         app1.fireAction();
     }
     // Entered 3 more pauses. One and two 5 min, third should be 15 min
-    ASSERT_EQ(con::as_minutes(app1.getMainTimerValue()), 15);
+    ASSERT_EQ(con::as_minutes(app1.get_main_timer_value()), 15);
     // Advance the pause and start new work interval
     MockDateTime::addMinutes(17);
     app1.fireAction();
-    ASSERT_EQ(con::as_minutes(app1.getMainTimerValue()), 25);
+    ASSERT_EQ(con::as_minutes(app1.get_main_timer_value()), 25);
     MockDateTime::addMinutes(26);
     app1.fireAction();
     // Should have entered the 5 minute pause again
-    ASSERT_EQ(con::as_minutes(app1.getMainTimerValue()), 5);
+    ASSERT_EQ(con::as_minutes(app1.get_main_timer_value()), 5);
 }
-
-#ifdef TESTS_THAT_FAIL
-TEST(canInterruptWork, mainTimerDoesntChange) {
-    auto& app = (*mk::pomodoroTimerApp());
-    am::advance_mins_and_test(&app, 4, 21);
-    app.fireAction();
-    // App should now be in interrupted state. After 12 minutes the timer should still be as previously
-    MockDateTime::addMinutes(12);
-    ASSERT_EQ(app.getMainTimerValue(), 21);
-    app.fireAction();
-    // Should be back in work ..The following call should only add 12 seconds, and not 12 minutes 12 seconds
-    am::advance_seconds_and_test(app, 12, 20, 48);
-}
-
-#endif
 
 #pragma clang diagnostic pop

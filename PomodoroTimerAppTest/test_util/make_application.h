@@ -44,7 +44,6 @@ namespace mk {
     }
 
     inline PomodoroSession* pomodoro_timer_app(initial_state const& initial_state_) {
-        // TODO future: first make use of first four parameters to modify the values. Once the feture gets supported
         auto* app = pomodoro_timer_app(true, initial_state_.settings);
         advance_pomodoro(app, true, initial_state_.current_pomodo_number);
 

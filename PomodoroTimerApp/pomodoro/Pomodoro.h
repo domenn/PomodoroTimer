@@ -31,12 +31,14 @@ class Pomodoro {
 
 public:
 
+    const bool is_long_pause;
+
     /**
      * Creating new Pomodoro automatically starts it in work mode.
      * @param start_timestamp Start time of this pomodoro
      * @param pause_time planned pause time for this one in milliseconds
      */
-    Pomodoro(qint64 start_timestamp, qint64 planned_pause_time);
+    Pomodoro(qint64 start_timestamp, qint64 planned_pause_time, bool is_long_pause = false);
 
     /**
      * Increments time for what_kind by how_much

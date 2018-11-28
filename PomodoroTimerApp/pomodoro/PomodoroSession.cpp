@@ -7,9 +7,9 @@
 void PomodoroSession::start_new_pomodoro(qint64 start_timestamp) {
     current_phase_start_timestamp_ = start_timestamp;
     state = PomodoroState::WORK;
-
+    auto make_long_pause = sessionsForBigPause == long_break_number - 1;
     pomodori_.emplace_back(current_phase_start_timestamp_,
-            time_for_task_.at(is_current_pomodoro_long_pause() ? PomodoroState::LONG_PAUSE : PomodoroState::PAUSE));
+            time_for_task_.at(make_long_pause? PomodoroState::LONG_PAUSE : PomodoroState::PAUSE), make_long_pause);
 
     current_pomodoro_ = &pomodori_.back();
 }
@@ -19,7 +19,7 @@ void PomodoroSession::initialize() {
     start_new_pomodoro(work_start_timestamp_);
 }
 
-qint64 PomodoroSession::getMainTimerValue() {
+qint64 PomodoroSession::get_main_timer_value() {
     auto elapsed = state != PomodoroState::INTERRUPTED ? current_pomodoro_->get_time_of_kind(state, true)
             : current_pomodoro_->get_time_of_kind(PomodoroState::WORK);
 
@@ -78,7 +78,7 @@ void PomodoroSession::complete_pomodoro_and_start_next(const qint64 timestamp_ov
     elapsed_times_[static_cast<int>(PomodoroState::WORK)] += current_pomodoro_->get_time_of_kind(PomodoroState::WORK);
     elapsed_times_[static_cast<int>(PomodoroState::INTERRUPTED)] += current_pomodoro_
             ->get_time_of_kind(PomodoroState::INTERRUPTED);
-    const auto which_pause = is_current_pomodoro_long_pause() ? PomodoroState::LONG_PAUSE : PomodoroState::PAUSE;
+    const auto which_pause = current_pomodoro_->is_long_pause ? PomodoroState::LONG_PAUSE : PomodoroState::PAUSE;
     elapsed_times_[static_cast<int>(which_pause)] += current_pomodoro_->get_time_of_kind(PomodoroState::PAUSE);
     start_new_pomodoro(timestamp_override);
 }

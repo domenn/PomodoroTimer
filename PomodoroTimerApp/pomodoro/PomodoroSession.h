@@ -47,7 +47,7 @@ public:
     explicit PomodoroSession(PomodoroSessionSettings const & settings = {});
     inline bool is_current_pomodoro_long_pause() const;
 	void initialize() override;
-	qint64 getMainTimerValue() override;
+	qint64 get_main_timer_value() override;
 	QString saveState() override;
 	void restore(const QString &state) override;
     void fireAction() override;
@@ -69,7 +69,7 @@ inline qint64 PomodoroSession::calculate_elapsed_time_for_current_run(qint64 tim
 }
 
 inline bool PomodoroSession::is_current_pomodoro_long_pause() const {
-    return sessionsForBigPause == long_break_number - 1;
+    return current_pomodoro_->is_long_pause;
 }
 
 inline bool PomodoroSession::work_time_ran_out(qint64 current_time) const {

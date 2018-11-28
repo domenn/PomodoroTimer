@@ -8,6 +8,8 @@
 #include "test_pomodoro_session_misc.h"
 #include "test_total_elapsed_times.h"
 #include "test_pomodoro.h"
+#include "test_interrupts.h"
+
 
 
 
@@ -22,12 +24,12 @@ TEST(runningInTestMode, true){
 }
 
 /*
- * NOTE: Test for pause switch is failing.
- * Next: will first make tests for total times. For example: start the app, advance 2 minutes .. total time should now be
- * 2 minute work. Advance another 25 min .. now 27 min. work.
- * If I fire then, I have 27 min. work and 0 pause. 2 minute advance, now I have 2 min. total pause, 27 work, 29 total.
- * Idea: when new pomodoro starts, increment old values to current in session, so no need to traverse vector each time.
+ * Still missing (tests):
+ * [OK] Long pause correctly counts seperate from normal pause.
+ * [OK] Interrupts and not interrupts .. Do timers work correctly while interupt (no change on countdown. Interrupt timer ticking). Total time ticking.
+ * [OK]  Interrupt can only be activated during pomodoro .. not pause.
  */
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

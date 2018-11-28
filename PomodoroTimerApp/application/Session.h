@@ -24,7 +24,7 @@ public:
     /**
     * Returns the main timer in ms. For Pomodoro timer this is the current timer.
     */
-    virtual qint64 getMainTimerValue() = 0;
+    virtual qint64 get_main_timer_value() = 0;
 
     /*void interrupt();
     void resumeInterrupt();

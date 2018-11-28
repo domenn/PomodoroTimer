@@ -5,13 +5,13 @@
 #include "Pomodoro.h"
 #include <PomodoroTimerApp/utils/mockable_datetime.h>
 
-Pomodoro::Pomodoro(const qint64 start_timestamp, const qint64 planned_pause_time)
+Pomodoro::Pomodoro(const qint64 start_timestamp, const qint64 planned_pause_time, const bool is_long_pause)
         :start_timestamp_(start_timestamp), planned_pause_time_(planned_pause_time),
          map_({{PomodoroState::LONG_PAUSE, &pause_time_},
                  {PomodoroState::PAUSE, &pause_time_},
                  {PomodoroState::INTERRUPTED, &interrupt_time},
                  {PomodoroState::WORK, &running_time_}
-         }) { }
+         }), is_long_pause(is_long_pause) { }
 
 void Pomodoro::add_time_of_kind(const PomodoroState what_kind, const qint64 how_much) {
     *(map_.at(what_kind)) += how_much;
