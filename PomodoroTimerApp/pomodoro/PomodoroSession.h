@@ -23,11 +23,15 @@ class PomodoroSession : public Session {
     // Inherited: qint64 current_phase_start_timestamp_;
 	// Inherited: qint64 work_start_timestamp_;
     PomodoroState state;
-    qint8 sessionsForBigPause = 0;
+    qint8 sessionsForBigPause{};
     const qint8 long_break_number;
 	std::vector<Pomodoro> pomodori_;
     Pomodoro* current_pomodoro_;
     std::array<qint64,POMODORO_STATE_NUM_ELEMENTS> elapsed_times_{};
+    mutable std::pair<Pomodoro*, int> cache_short_pauses_done{};
+    mutable std::pair<Pomodoro*, int> cache_long_pauses_done{};
+    mutable std::pair<Pomodoro*, int> cache_interrupted_pomodori{};
+    mutable std::pair<Pomodoro*, int> cache_non_interrupted_pomodori{};
 
 
 	void start_new_pomodoro(qint64 start_timestamp);
@@ -40,6 +44,13 @@ class PomodoroSession : public Session {
 	inline qint64 calculate_elapsed_time_for_current_run(qint64 timestamp_override) const;
     inline bool work_time_ran_out(qint64 current_time) const;
 	inline void select_pause();
+	int count_pomodori_with(bool (*predicate) (Pomodoro const * const)) const;
+	int calculate_pauses() const;
+	int calculate_long_pauses() const;
+	int calculate_interrupted_pomodori() const;
+	int calculate_non_interrupted_pomodori() const;
+    template <typename integer_type>
+    qint64 handle_cache (std::pair<Pomodoro*, integer_type> & variable, integer_type (PomodoroSession::*) () const) const;
 
 public:
     const std::map<PomodoroState, qint64> time_for_task_;
@@ -55,8 +66,13 @@ public:
     qint64 get_total_pause() const override;
     qint64 get_total_time() const override;
     PomodoroState get_current_state() const override;
-
-
+    int get_pomodori_done() const override;
+    int get_short_pauses_done() const override;
+    int get_long_pauses_done() const override;
+    qint64 get_total_non_interrupted_time() const override;
+    qint64 get_session_start_time() const override;
+    int get_interrupted_pomodori() const override;
+    int get_non_interrupted_pomodori() const override;
 };
 
 
@@ -84,5 +100,21 @@ inline void PomodoroSession::select_pause() {
         state = PomodoroState::LONG_PAUSE;
     } else {
         state = PomodoroState::PAUSE;
+    }
+}
+
+template <typename settings_type>
+Session* const Session::create(const ApplicationMode& mode, settings_type const * const settings_structure) {
+    switch (mode) {
+    case ApplicationMode::POMODORO_TIMER:
+        if (settings_structure != nullptr) {
+            return new PomodoroSession(*settings_structure);
+        } else {
+            return new PomodoroSession;
+        }
+
+        //	case ApplicationMode::STOPWATCH:
+    default:
+        throw std::logic_error("Stopwatch mode not implemented");
     }
 }

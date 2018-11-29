@@ -39,7 +39,7 @@ void MainWindow::myTimerHandler() {
 
 //    // REFACTOR: the number should be command line parameter, or option
 	auto theNumber = session->get_main_timer_value();
-    auto stringTimeRepr = millisecondsToTimer::intervalToString(theNumber);
+    auto stringTimeRepr = millisecondsToTimer::interval_to_string(theNumber);
 
     guiBuilder.getMainTimerLabel()->setText(stringTimeRepr);
 }
@@ -77,20 +77,21 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 
 void MainWindow::fireButtonClickInitial() {
 
-    // session = Session::create(applicationMode);
-
     session->initialize();
 
-    fireButtonClick();
+    guiBuilder.set_main_timer_label(session->get_main_timer_value());
+    guiBuilder.fire_action_gui_update(session);
     timer = new QTimer;
     QObject::connect(timer, &QTimer::timeout, this, &MainWindow::myTimerHandler);
-    QThread::msleep(80);
-    timer->start(1000);  // 100 nanoseconds or 1 second interval
+    QThread::msleep(30);
+    timer->start(TIMER_TICK_TIMEOUT);
     guiBuilder.changeFireBtnConnection();
 }
 
-void MainWindow::fireButtonClick() {
+void MainWindow::fire_button_click() {
     session->fireAction();
+    guiBuilder.fire_action_gui_update(session);
+    guiBuilder.set_main_timer_label(session->get_main_timer_value());
 }
 
 ApplicationMode MainWindow::figureOutAppMode() {

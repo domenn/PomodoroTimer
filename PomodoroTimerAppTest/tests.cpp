@@ -9,6 +9,7 @@
 #include "test_total_elapsed_times.h"
 #include "test_pomodoro.h"
 #include "test_interrupts.h"
+#include "test_interface.h"
 
 
 

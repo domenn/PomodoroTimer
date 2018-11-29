@@ -13,13 +13,8 @@ class Session;
 
 class MainWindow : public QDialog {
 
-    constexpr static int MAIN_BUTTONS_INNER_PADDING = 16;
-    static constexpr const char*const buttonLabelStartWork = "Start work";
-    static constexpr const char*const buttonLabelStartPause = "Start pause";
-    static constexpr const char*const buttonLabelStartLongPause = "Start long pause";
-    static constexpr const char*const buttonLabelInterrupt = "Interrupt";
-    static constexpr const char*const buttonLabelContinue = "Continue";
-    static constexpr const char*const buttonLabelFinishSession = "Finish";
+
+	constexpr static int TIMER_TICK_TIMEOUT = 133;
 
 	// IMPORTANT: DO NOT CHANGE ORDER OF VARIABLES
 	PomodoroAppCommandLine cmdLine;
@@ -38,7 +33,7 @@ public:
 
 public slots:
     void fireButtonClickInitial();
-    void fireButtonClick();
+    void fire_button_click();
     void finishButtonClick();
     void myTimerHandler();
     QTimer *timer;

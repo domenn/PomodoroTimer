@@ -9,7 +9,7 @@ void PomodoroSession::start_new_pomodoro(qint64 start_timestamp) {
     state = PomodoroState::WORK;
     auto make_long_pause = sessionsForBigPause == long_break_number - 1;
     pomodori_.emplace_back(current_phase_start_timestamp_,
-            time_for_task_.at(make_long_pause? PomodoroState::LONG_PAUSE : PomodoroState::PAUSE), make_long_pause);
+            time_for_task_.at(make_long_pause ? PomodoroState::LONG_PAUSE : PomodoroState::PAUSE), make_long_pause);
 
     current_pomodoro_ = &pomodori_.back();
 }
@@ -89,4 +89,67 @@ qint64 PomodoroSession::get_total_time() const {
 
 PomodoroState PomodoroSession::get_current_state() const {
     return state;
+}
+
+int PomodoroSession::get_pomodori_done() const {
+    return static_cast<int>(pomodori_.size() - 1);
+}
+
+int PomodoroSession::get_short_pauses_done() const {
+    return static_cast<int>(handle_cache<int>(cache_short_pauses_done, &PomodoroSession::calculate_pauses));
+}
+
+int PomodoroSession::get_long_pauses_done() const {
+    return static_cast<int>(handle_cache<int>(cache_long_pauses_done, &PomodoroSession::calculate_long_pauses));
+}
+
+qint64 PomodoroSession::get_total_non_interrupted_time() const {
+    return get_total_pause() + get_total_elapsed_time_of_kind(PomodoroState::WORK);
+}
+
+qint64 PomodoroSession::get_session_start_time() const {
+    return work_start_timestamp_;
+}
+
+int PomodoroSession::calculate_pauses() const {
+    return count_pomodori_with([](Pomodoro const* const p)  -> bool  { return !p->is_long_pause; });
+}
+
+int PomodoroSession::calculate_long_pauses() const {
+    return count_pomodori_with([](Pomodoro const* const p)  -> bool  { return p->is_long_pause; });
+}
+
+int PomodoroSession::calculate_interrupted_pomodori() const {
+    return count_pomodori_with([](Pomodoro const* const p)  -> bool  { return p->was_interrupted(); });
+}
+
+int PomodoroSession::calculate_non_interrupted_pomodori() const {
+    return count_pomodori_with([](Pomodoro const* const p)  -> bool  { return !p->was_interrupted(); });
+}
+
+template<typename integer_type>
+qint64 PomodoroSession::handle_cache(std::pair<Pomodoro*, integer_type> & variable, integer_type (PomodoroSession::* function)() const) const {
+    if (variable.first != current_pomodoro_) {
+        variable.first = current_pomodoro_;
+        variable.second = (this->*function)();
+    }
+    return variable.second;
+}
+
+int PomodoroSession::count_pomodori_with(bool (* predicate)(const Pomodoro* const)) const {
+    int result{};
+    for (int i = 0; i < pomodori_.size() - 1; ++i) {
+        if (predicate(&pomodori_[i])) {
+            ++result;
+        }
+    }
+    return result;
+}
+
+int PomodoroSession::get_interrupted_pomodori() const {
+    return static_cast<int>(handle_cache<int>(cache_interrupted_pomodori, &PomodoroSession::calculate_interrupted_pomodori));
+}
+
+int PomodoroSession::get_non_interrupted_pomodori() const {
+    return static_cast<int>(handle_cache<int>(cache_non_interrupted_pomodori, &PomodoroSession::calculate_non_interrupted_pomodori));
 }

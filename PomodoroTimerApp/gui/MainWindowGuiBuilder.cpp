@@ -5,28 +5,29 @@
 #include "MainWindowGuiBuilder.h"
 #include "main_window.h"
 
-
 #include <QMenuBar>
 #include <QPushButton>
 #include <QFormLayout>
 #include <QLabel>
+#include <PomodoroTimerApp/utils/millisecondsToTimer.h>
 
 #pragma clang diagnostic push
 // Ignore IDE warnings for QVBoxLayout * casting for file
 #pragma ide diagnostic ignored "OCDFAInspection"
-MainWindowGuiBuilder::MainWindowGuiBuilder(const ApplicationMode mode, MainWindow *const mainWindow1)
-        : mode(mode), mainWindow(mainWindow1) {}
+
+MainWindowGuiBuilder::MainWindowGuiBuilder(const ApplicationMode mode, MainWindow* const mainWindow1)
+        :mode(mode), mainWindow(mainWindow1) { }
 
 void MainWindowGuiBuilder::build() {
     createMenu();
-    auto *mainLayout = new QVBoxLayout;
+    auto* mainLayout = new QVBoxLayout;
     mainLayout->setMenuBar(menuBar);
     mainWindow->setLayout(mainLayout);
 
     mainTimerLabel = createMainTimerLabel(mainLayout);
     createStartStopButtons(mainLayout);
 
-    if (mode==ApplicationMode::POMODORO_TIMER) {
+    if (mode == ApplicationMode::POMODORO_TIMER) {
         createAdditionalInfoItems(mainLayout);
         mainWindow->setWindowTitle(QObject::tr("Pomodoro Timer")
         );
@@ -36,45 +37,47 @@ void MainWindowGuiBuilder::build() {
 
 }
 
-void MainWindowGuiBuilder::createAdditionalInfoItems(QVBoxLayout *pLayout) {
-    const char *const names[]{"Pomodori done", "Short Pauses", "Long Pauses", "Total work", "Total Pause",
-                              "Total Session time", "Time since session start", "Session start at", "CheatedTime"};
+void MainWindowGuiBuilder::createAdditionalInfoItems(QVBoxLayout* pLayout) {
 
     auto *layout = new QFormLayout;
-    constexpr int NUMBER_ROWS = sizeof(names) / sizeof(char *);
+    // NOTE: v1
+//    std::pair<QLabel*, char const* const>* ptr_storage = &lTotalWork;
+//    for (int i = 0; i < POMODORO_STATE_NUM_INFO_ELEMENTS; ++i) {
+//        ptr_storage[i].first = new QLabel(ptr_storage[i].second);
+//        layout->addRow(new QLabel(ptr_storage[i].second), ptr_storage[i].first);
+//    }
 
-    QLabel *qLabel[NUMBER_ROWS];
-    for (int i = 0; i < NUMBER_ROWS; ++i) {
-        qLabel[i] = new QLabel(names[i]);
-        layout->addRow(new QLabel(names[i]), qLabel[i]);
+    auto ptr_struct_items = reinterpret_cast<additional_info_field*>(&additional_info_fields);
+    for ( int i = 0; i < sizeof(additional_info_fields) / sizeof(additional_info_field); ++i) {
+        auto itm = ptr_struct_items + i;
+        itm->first = new QLabel(itm->second);
+        layout->addRow(new QLabel(itm->second), itm->first);
     }
     pLayout->addLayout(layout, 1);
-
 }
 
 void MainWindowGuiBuilder::createMenu() {
     menuBar = new QMenuBar;
 
-    QMenu *fileMenu = new QMenu(QObject::tr("&File"), mainWindow);
+    QMenu* fileMenu = new QMenu(QObject::tr("&File"), mainWindow);
     auto exitAction = fileMenu->addAction(QObject::tr("&Exit"));
     menuBar->addMenu(fileMenu);
     QObject::connect(exitAction, SIGNAL(triggered()), mainWindow, SLOT(accept()));
 }
 
-QLabel *MainWindowGuiBuilder::createMainTimerLabel(QLayout *targetGrid) {
+QLabel* MainWindowGuiBuilder::createMainTimerLabel(QLayout* targetGrid) {
 
     auto theLabel = new QLabel(QObject::tr("TimerPlaceholder"));
     QFont f("Arial", 36, QFont::Bold);
     theLabel->setFont(f);
 
-    ((QVBoxLayout *) targetGrid)->addWidget(theLabel, 1, Qt::AlignCenter);
+    ((QVBoxLayout*) targetGrid)->addWidget(theLabel, 1, Qt::AlignCenter);
     return theLabel;
 }
 
-void MainWindowGuiBuilder::createStartStopButtons(QLayout *pLayout) {
+void MainWindowGuiBuilder::createStartStopButtons(QLayout* pLayout) {
 
-
-    QPushButton *buttons[2];
+    QPushButton* buttons[2];
 
     for (int i = 0; i < 2; ++i) {
         buttons[i] = new QPushButton(QObject::tr("Button %1").arg(i + 1));
@@ -90,27 +93,28 @@ void MainWindowGuiBuilder::createStartStopButtons(QLayout *pLayout) {
     endButton = buttons[1];
     fireButton->setText(buttonLabelStartWork);
     endButton->setText(buttonLabelFinishSession);
-    btnToInitial = QObject::connect(fireButton, &QPushButton::released, mainWindow, &MainWindow::fireButtonClickInitial);
+    btnToInitial = QObject::connect(fireButton, &QPushButton::released, mainWindow,
+            &MainWindow::fireButtonClickInitial);
     QObject::connect(endButton, &QPushButton::released, mainWindow, &MainWindow::finishButtonClick);
 
-    auto *box = new QHBoxLayout;
+    auto* box = new QHBoxLayout;
     box->addWidget(buttons[0], 1);
     box->addWidget(buttons[1], 1);
     box->setContentsMargins(0, 8, 0, 8);
 
-    ((QVBoxLayout *) pLayout)->addLayout(box, 1);
+    ((QVBoxLayout*) pLayout)->addLayout(box, 1);
 }
 
 void MainWindowGuiBuilder::changeFireBtnConnection() {
     QObject::disconnect(btnToInitial);
-    QObject::connect(fireButton, &QPushButton::released, mainWindow, &MainWindow::fireButtonClick);
+    QObject::connect(fireButton, &QPushButton::released, mainWindow, &MainWindow::fire_button_click);
 }
 
-QPushButton * const MainWindowGuiBuilder::getFireButton() const {
+QPushButton* const MainWindowGuiBuilder::getFireButton() const {
     return fireButton;
 }
 
-QLabel * const MainWindowGuiBuilder::getMainTimerLabel() const {
+QLabel* const MainWindowGuiBuilder::getMainTimerLabel() const {
     return mainTimerLabel;
 }
 
@@ -132,4 +136,13 @@ void MainWindowGuiBuilder::initializeStopwatch() {
 //    //session->beginPause();
 //    fireButton->setText("Resume");
 }
+
+void MainWindowGuiBuilder::set_main_timer_label(qint64 const millis) {
+    mainTimerLabel->setText(millisecondsToTimer::interval_to_string(millis));
+}
+
+void MainWindowGuiBuilder::fire_action_gui_update(Session const* const session) {
+    additional_info_fields.lPomodoriDone.first->setText(QString::number(session->get_pomodori_done()));
+}
+
 #pragma clang diagnostic pop

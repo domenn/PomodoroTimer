@@ -39,3 +39,7 @@ qint64 Pomodoro::get_time_of_kind(PomodoroState what_kind, qint64 current_timest
     }
     return current_state_time;
 }
+
+bool Pomodoro::was_interrupted() const {
+    return get_time_of_kind(PomodoroState::INTERRUPTED) > 0;
+}

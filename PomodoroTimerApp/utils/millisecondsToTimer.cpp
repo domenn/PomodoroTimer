@@ -5,7 +5,7 @@
 #include "millisecondsToTimer.h"
 #include <QTime>
 
-QString millisecondsToTimer::intervalToString(qint64 millis) {
+QString millisecondsToTimer::interval_to_string(qint64 millis) {
     qint64 seconds = (millis / 1000) % 60;
     qint64 minutes = ((millis / (1000 * 60)) % 60);
     qint64 hours = ((millis / (1000 * 60 * 60)) % 24);

@@ -10,7 +10,7 @@
 #include <PomodoroTimerApp/pomodoro/PomodoroState.h>
 #include "ApplicationMode.h"
 
-class Session {
+class Session { // NOLINT(cppcoreguidelines-pro-type-member-init)
 protected:
     qint64 current_phase_start_timestamp_;
     qint64 work_start_timestamp_;
@@ -25,20 +25,6 @@ public:
     * Returns the main timer in ms. For Pomodoro timer this is the current timer.
     */
     virtual qint64 get_main_timer_value() = 0;
-
-    /*void interrupt();
-    void resumeInterrupt();
-
-    virtual void beginPause();
-    void beginLongPause();
-    void beginWork();
-    void beginWorkInitial();
-    virtual QString fireAction();
-
-    virtual qint64 getTaskTimeMs() const;
-
-    virtual QString reset();*/
-
 
     /**
      * Returns JSON string that can be used to save state before exit.
@@ -81,4 +67,19 @@ public:
     virtual qint64 get_total_time() const = 0;
 
     virtual PomodoroState get_current_state() const = 0;
+
+    virtual int get_pomodori_done() const = 0;
+
+    virtual int get_short_pauses_done() const = 0;
+
+    virtual int get_long_pauses_done() const = 0;
+
+    virtual qint64 get_total_non_interrupted_time() const = 0;
+
+    virtual qint64 get_session_start_time() const = 0;
+
+    virtual int get_interrupted_pomodori() const = 0;
+
+    virtual int get_non_interrupted_pomodori() const = 0;
+
 };

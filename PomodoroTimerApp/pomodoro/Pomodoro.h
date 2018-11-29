@@ -60,4 +60,9 @@ public:
      * @return Total elapsed time for this pomodoro, sum of all.
      */
     qint64 get_total_time(bool return_stored_only = false) const;
+
+    /**
+     * @return True if work of this was ever interrupted.
+     */
+    bool was_interrupted() const;
 };
