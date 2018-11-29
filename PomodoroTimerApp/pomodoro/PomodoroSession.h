@@ -53,15 +53,16 @@ class PomodoroSession : public Session {
     qint64 handle_cache (std::pair<Pomodoro*, integer_type> & variable, integer_type (PomodoroSession::*) () const) const;
 
 public:
+    ~PomodoroSession() override = default;
     const std::map<PomodoroState, qint64> time_for_task_;
 
     explicit PomodoroSession(PomodoroSessionSettings const & settings = {});
     inline bool is_current_pomodoro_long_pause() const;
-	void initialize() override;
+	qint64 initialize() override;
 	qint64 get_main_timer_value() override;
 	QString saveState() override;
 	void restore(const QString &state) override;
-    void fireAction() override;
+    PomodoroState fireAction() override;
     qint64 get_total_elapsed_time_of_kind(PomodoroState kind) const override;
     qint64 get_total_pause() const override;
     qint64 get_total_time() const override;

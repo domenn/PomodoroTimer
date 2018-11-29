@@ -24,18 +24,21 @@ public:
     MainWindowGuiBuilder(ApplicationMode mode, MainWindow*mainWindow1);
     void build();
 
-    void changeFireBtnConnection();
+    void changeFireBtnConnection(bool starting);
     QPushButton * const getFireButton() const;
 	QLabel * const getMainTimerLabel() const;
     void initializeStopwatch();
     void set_main_timer_label(qint64 millis);
-	void fire_action_gui_update(Session const* session);
+	void fire_action_gui_update(Session const*, QString const &);
+	void update_time_labels(Session const *);
+	void set_session_start_label(const QString& qString);
+	void set_settings_menu_item_enabled(bool b);
+	QPushButton* const get_end_button(){ return endButton; }
 private:
     constexpr static int MAIN_BUTTONS_INNER_PADDING = 16;
     static constexpr const char*const buttonLabelStartWork = "Start work";
     static constexpr const char*const buttonLabelStartPause = "Start pause";
     static constexpr const char*const buttonLabelStartLongPause = "Start long pause";
-    static constexpr const char*const buttonLabelInterrupt = "Interrupt";
     static constexpr const char*const buttonLabelContinue = "Continue";
     static constexpr const char*const buttonLabelFinishSession = "Finish";
 
@@ -45,7 +48,8 @@ private:
     QMenuBar *menuBar;
     QLabel* mainTimerLabel;
     QAction *exitAction;
-    QPushButton* fireButton;
+    QAction *settings_menu_action;
+    QPushButton* fire_button;
     QPushButton* endButton;
 
     typedef std::pair<QLabel*, char const* const> additional_info_field;
@@ -63,9 +67,11 @@ private:
 	}additional_info_fields;
 
     QMetaObject::Connection btnToInitial;
+	QMetaObject::Connection btn_to_working;
 
     void createMenu();
     QLabel * createMainTimerLabel(QLayout *targetQLayout);
     void createStartStopButtons(QLayout*);
     void createAdditionalInfoItems(QVBoxLayout *pLayout);
+
 };

@@ -1,5 +1,5 @@
 #pragma once
-#include "MainWindowGuiBuilder.h"
+#include "main_window_gui_builder.h"
 
 #include <PomodoroTimerApp/utils/PomodoroAppCommandLine.h>
 #include <QDialog>
@@ -20,7 +20,9 @@ class MainWindow : public QDialog {
 	PomodoroAppCommandLine cmdLine;
     ApplicationMode applicationMode;
     MainWindowGuiBuilder guiBuilder;
-	Session* const session;
+	Session* session{};
+	QTimer *timer{};
+	static const std::map<PomodoroState const, const char * const> map_button_text_for_state;
 
     ApplicationMode figureOutAppMode();
 
@@ -36,5 +38,6 @@ public slots:
     void fire_button_click();
     void finishButtonClick();
     void myTimerHandler();
-    QTimer *timer;
+	void settings_menu_action_click();
+    void create_timer();
 };

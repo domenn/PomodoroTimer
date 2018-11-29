@@ -10,6 +10,8 @@
 // https://stackoverflow.com/questions/33638433/setup-google-test-in-clion
 // Idea: reduce timer rate on minimize
 // More: clean and interrupted pomodori count
+// When timer runs out, textButton doesn't change. It should.
+// Idea: settings window can set times. Give ability to reset to defaults.
 
 int main(int argc, char ** argv) {
 #ifdef RUNNING_POMODORO_TESTS

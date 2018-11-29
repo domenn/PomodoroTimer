@@ -14,9 +14,10 @@ void PomodoroSession::start_new_pomodoro(qint64 start_timestamp) {
     current_pomodoro_ = &pomodori_.back();
 }
 
-void PomodoroSession::initialize() {
+qint64 PomodoroSession::initialize() {
     work_start_timestamp_ = dt::currentTimeMs();
     start_new_pomodoro(work_start_timestamp_);
+    return work_start_timestamp_;
 }
 
 qint64 PomodoroSession::get_main_timer_value() {
@@ -34,7 +35,7 @@ void PomodoroSession::restore(const QString& state) {
 
 }
 
-void PomodoroSession::fireAction() {
+PomodoroState PomodoroSession::fireAction() {
     const auto timestamp_function_call = dt::currentTimeMs();
     current_pomodoro_->add_time_of_kind(state, calculate_elapsed_time_for_current_run(timestamp_function_call));
     switch (state) {
@@ -54,6 +55,7 @@ void PomodoroSession::fireAction() {
         break;
     }
     current_phase_start_timestamp_ = timestamp_function_call;
+    return state;
 }
 
 PomodoroSession::PomodoroSession(PomodoroSessionSettings const& settings)

@@ -2,7 +2,7 @@
 // Created by domen on 23. 11. 2018.
 //
 
-#include "MainWindowGuiBuilder.h"
+#include "main_window_gui_builder.h"
 #include "main_window.h"
 
 #include <QMenuBar>
@@ -29,8 +29,7 @@ void MainWindowGuiBuilder::build() {
 
     if (mode == ApplicationMode::POMODORO_TIMER) {
         createAdditionalInfoItems(mainLayout);
-        mainWindow->setWindowTitle(QObject::tr("Pomodoro Timer")
-        );
+        mainWindow->setWindowTitle(QObject::tr("Pomodoro Timer"));
     } else {
         initializeStopwatch();
     }
@@ -39,16 +38,9 @@ void MainWindowGuiBuilder::build() {
 
 void MainWindowGuiBuilder::createAdditionalInfoItems(QVBoxLayout* pLayout) {
 
-    auto *layout = new QFormLayout;
-    // NOTE: v1
-//    std::pair<QLabel*, char const* const>* ptr_storage = &lTotalWork;
-//    for (int i = 0; i < POMODORO_STATE_NUM_INFO_ELEMENTS; ++i) {
-//        ptr_storage[i].first = new QLabel(ptr_storage[i].second);
-//        layout->addRow(new QLabel(ptr_storage[i].second), ptr_storage[i].first);
-//    }
-
+    auto* layout = new QFormLayout;
     auto ptr_struct_items = reinterpret_cast<additional_info_field*>(&additional_info_fields);
-    for ( int i = 0; i < sizeof(additional_info_fields) / sizeof(additional_info_field); ++i) {
+    for (int i = 0; i < sizeof(additional_info_fields) / sizeof(additional_info_field); ++i) {
         auto itm = ptr_struct_items + i;
         itm->first = new QLabel(itm->second);
         layout->addRow(new QLabel(itm->second), itm->first);
@@ -60,9 +52,12 @@ void MainWindowGuiBuilder::createMenu() {
     menuBar = new QMenuBar;
 
     QMenu* fileMenu = new QMenu(QObject::tr("&File"), mainWindow);
-    auto exitAction = fileMenu->addAction(QObject::tr("&Exit"));
+    settings_menu_action = fileMenu->addAction(QObject::tr("&Settings"));
+    fileMenu->addSeparator();
+    exitAction = fileMenu->addAction(QObject::tr("&Exit"));
     menuBar->addMenu(fileMenu);
     QObject::connect(exitAction, SIGNAL(triggered()), mainWindow, SLOT(accept()));
+    QObject::connect(settings_menu_action, &QAction::triggered, mainWindow, &MainWindow::settings_menu_action_click);
 }
 
 QLabel* MainWindowGuiBuilder::createMainTimerLabel(QLayout* targetGrid) {
@@ -89,11 +84,12 @@ void MainWindowGuiBuilder::createStartStopButtons(QLayout* pLayout) {
                 QStringLiteral("padding-top: %1px; padding-bottom: %1px;").arg(MAIN_BUTTONS_INNER_PADDING));
     }
 
-    fireButton = buttons[0];
+    fire_button = buttons[0];
     endButton = buttons[1];
-    fireButton->setText(buttonLabelStartWork);
+    fire_button->setText(buttonLabelStartWork);
     endButton->setText(buttonLabelFinishSession);
-    btnToInitial = QObject::connect(fireButton, &QPushButton::released, mainWindow,
+    endButton->setEnabled(false);
+    btnToInitial = QObject::connect(fire_button, &QPushButton::released, mainWindow,
             &MainWindow::fireButtonClickInitial);
     QObject::connect(endButton, &QPushButton::released, mainWindow, &MainWindow::finishButtonClick);
 
@@ -105,13 +101,20 @@ void MainWindowGuiBuilder::createStartStopButtons(QLayout* pLayout) {
     ((QVBoxLayout*) pLayout)->addLayout(box, 1);
 }
 
-void MainWindowGuiBuilder::changeFireBtnConnection() {
-    QObject::disconnect(btnToInitial);
-    QObject::connect(fireButton, &QPushButton::released, mainWindow, &MainWindow::fire_button_click);
+void MainWindowGuiBuilder::changeFireBtnConnection(bool const starting) {
+    if (starting) {
+        QObject::disconnect(btnToInitial);
+        btn_to_working = QObject::connect(fire_button, &QPushButton::released, mainWindow,
+                &MainWindow::fire_button_click);
+    } else {
+        QObject::disconnect(btn_to_working);
+        btnToInitial = QObject::connect(fire_button, &QPushButton::released, mainWindow,
+                &MainWindow::fireButtonClickInitial);
+    }
 }
 
 QPushButton* const MainWindowGuiBuilder::getFireButton() const {
-    return fireButton;
+    return fire_button;
 }
 
 QLabel* const MainWindowGuiBuilder::getMainTimerLabel() const {
@@ -134,15 +137,44 @@ void MainWindowGuiBuilder::initializeStopwatch() {
 //    printf(strr.c_str());
 //    session->restore(stopwatchState);
 //    //session->beginPause();
-//    fireButton->setText("Resume");
+//    fire_button->setText("Resume");
 }
 
 void MainWindowGuiBuilder::set_main_timer_label(qint64 const millis) {
     mainTimerLabel->setText(millisecondsToTimer::interval_to_string(millis));
 }
 
-void MainWindowGuiBuilder::fire_action_gui_update(Session const* const session) {
+void MainWindowGuiBuilder::fire_action_gui_update(Session const* const session, QString const& fire_btn_text) {
     additional_info_fields.lPomodoriDone.first->setText(QString::number(session->get_pomodori_done()));
+    additional_info_fields.lLongPauses.first->setText(QString::number(session->get_long_pauses_done()));
+    additional_info_fields.lShortPauses.first->setText(QString::number(session->get_short_pauses_done()));
+    fire_button->setText(fire_btn_text);
+}
+
+void MainWindowGuiBuilder::update_time_labels(Session const* const session) {
+    additional_info_fields.lTimeSinceSessionStart.first
+            ->setText(millisecondsToTimer::interval_to_string(session->get_total_time()));
+
+    additional_info_fields.lTotalPause.first
+            ->setText(millisecondsToTimer::interval_to_string(session->get_total_pause()));
+
+    additional_info_fields.lTotalWork.first->setText(
+            millisecondsToTimer::interval_to_string(session->get_total_elapsed_time_of_kind(PomodoroState::WORK)));
+
+    additional_info_fields.lTotalSessionTime.first
+            ->setText(millisecondsToTimer::interval_to_string(session->get_total_non_interrupted_time()));
+
+    additional_info_fields.lCheatedTime.first->setText(millisecondsToTimer::interval_to_string(
+            session->get_total_elapsed_time_of_kind(PomodoroState::INTERRUPTED)));
+
+}
+
+void MainWindowGuiBuilder::set_session_start_label(const QString& qString) {
+    additional_info_fields.lSessionStartAt.first->setText(qString);
+}
+
+void MainWindowGuiBuilder::set_settings_menu_item_enabled(const bool b) {
+    settings_menu_action->setEnabled(b);
 }
 
 #pragma clang diagnostic pop

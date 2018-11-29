@@ -16,10 +16,11 @@ protected:
     qint64 work_start_timestamp_;
 
 public:
+    virtual ~Session() = default;
     /**
      * Resets values to zero and starts the timer. Shall be used when starting the timer for the first time.
     */
-    virtual void initialize() = 0;
+    virtual qint64 initialize() = 0;
 
     /**
     * Returns the main timer in ms. For Pomodoro timer this is the current timer.
@@ -42,8 +43,8 @@ public:
      * @param mode What mode do we use our app in
      * @return Pointer to session on heap. Can be freed with delete.
      */
-    template <typename settings_type>
-    static Session* const create(const ApplicationMode& mode, settings_type const * settings_structure);
+    template<typename settings_type>
+    static Session* const create(const ApplicationMode& mode, settings_type const* settings_structure);
 
     static Session* const create(const ApplicationMode& mode);
 
@@ -51,7 +52,7 @@ public:
      * The function is basically play/pause handler. Decides what to do: play, pause, and if pause, decides which thing to pause. Returns string for a button.
      * @return String that represents state, should be written to button.
      */
-    virtual void fireAction() = 0;
+    virtual PomodoroState fireAction() = 0;
 
     virtual qint64 get_total_elapsed_time_of_kind(PomodoroState kind) const = 0;
 
