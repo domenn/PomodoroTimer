@@ -14,12 +14,11 @@ Session* const Session::create(const ApplicationMode& mode) {
 Session* const Session::create(const ApplicationMode& mode, array_of_settings const& settings) {
     switch (mode) {
     case ApplicationMode::POMODORO_TIMER: {
-        PomodoroSessionSettings settings_structure{
-                .time_work = ApplicationSetting::get_setting_by_key(settings, ApplicationSetting::KEY_S_WORK_TIME),
-                .time_pause = ApplicationSetting::get_setting_by_key(settings, ApplicationSetting::KEY_S_PAUSE_TIME),
-                .time_long_pause = ApplicationSetting::get_setting_by_key(settings,
+        PomodoroSessionSettings settings_structure{ApplicationSetting::get_setting_by_key(settings, ApplicationSetting::KEY_S_WORK_TIME),
+                ApplicationSetting::get_setting_by_key(settings, ApplicationSetting::KEY_S_PAUSE_TIME),
+                ApplicationSetting::get_setting_by_key(settings,
                         ApplicationSetting::KEY_S_LONG_PAUSE_TIME),
-                .long_break_number = static_cast<const qint8>(ApplicationSetting::get_setting_by_key(settings,
+                static_cast<const qint8>(ApplicationSetting::get_setting_by_key(settings,
                         ApplicationSetting::KEY_S_WORK_TIME))
         };
         return template_create<PomodoroSessionSettings>(mode, &settings_structure);

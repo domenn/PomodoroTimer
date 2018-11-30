@@ -8,7 +8,6 @@
 #pragma ide diagnostic ignored "cert-err58-cpp"
 
 #include "test_util/tests_h_common.h"
-#define DEFAULT_TIME_VALUE 1262347200000
 
 TEST(timeMocks, correct){
     MockDateTime::setTime();

@@ -7,10 +7,7 @@
 // Tests use top level macro, probably global variables. We suppress compiler warnings.
 #pragma ide diagnostic ignored "cert-err58-cpp"
 
-#include "gtest/gtest.h"
-#include <PomodoroTimerApp/utils/mockable_datetime.h>
-#include <PomodoroTimerApp/utils/date_format_converter.h>
-#include <PomodoroTimerApp/pomodoro/Pomodoro.h>
+#include "test_util/tests_h_common.h"
 
 TEST(pomodoro, canGetAndSetTimes) {
     constexpr qint64 TP = 1000;

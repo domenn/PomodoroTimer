@@ -30,6 +30,24 @@ set(CMAKE_AUTOMOC ON)
 #message("CppLogger sources at ${source_dir}")
 #include_directories(${source_dir}/include)
 
+# for MSVC
+if(MSVC)
+  set(variables 
+    CMAKE_CXX_FLAGS_DEBUG
+    CMAKE_CXX_FLAGS_RELEASE
+	CMAKE_CXX_FLAGS_RELWITHDEBINFO
+	CMAKE_CXX_FLAGS_MINSIZEREL
+  )
+  foreach(variable ${variables})
+	if(${variable} MATCHES "/MD")
+	  string(REGEX REPLACE "/MD" "/MT" ${variable} "${${variable}}")
+	endif()
+  endforeach()
+
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
+
+endif()
+
 # Find the QtWidgets library
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")

@@ -14,3 +14,4 @@
 #include "app_manip.h"
 
 typedef PomodoroState eps;
+#define DEFAULT_TIME_VALUE 1262347200000

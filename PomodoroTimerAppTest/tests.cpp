@@ -2,15 +2,16 @@
 // Created by domen on 23. 11. 2018.
 //
 
-
 #include "test_cmdline_parser.h"
+#include "test_pomodoro.h"
+#include "test_time_setting.h"
+#ifndef _MSC_VER
 #include "test_main_timer_values.h"
 #include "test_pomodoro_session_misc.h"
 #include "test_total_elapsed_times.h"
-#include "test_pomodoro.h"
 #include "test_interrupts.h"
 #include "test_interface.h"
-#include "test_time_setting.h"
+#endif
 
 
 
