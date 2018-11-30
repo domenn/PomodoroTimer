@@ -23,7 +23,7 @@ namespace mk {
      * @return Pointer to created session (heap)
      */
     inline PomodoroSession* pomodoro_timer_app(const bool start = true, const PomodoroSessionSettings& settings = {}) {
-        PomodoroSession* app = (PomodoroSession*) Session::create(ApplicationMode::POMODORO_TIMER, &settings);
+        PomodoroSession* app = (PomodoroSession*) Session::template_create(ApplicationMode::POMODORO_TIMER, &settings);
         if (start) {
             app->initialize();
         }

@@ -10,6 +10,7 @@
 #include "test_pomodoro.h"
 #include "test_interrupts.h"
 #include "test_interface.h"
+#include "test_time_setting.h"
 
 
 

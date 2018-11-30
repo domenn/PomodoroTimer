@@ -16,7 +16,7 @@ class PomodoroAppCommandLine {
 public:
     bool const isStopwatchMode;
 
-    PomodoroAppCommandLine(QApplication * app);
+    explicit PomodoroAppCommandLine(QApplication * app);
 };
 
 

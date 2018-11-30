@@ -3,8 +3,8 @@
 
 #include <PomodoroTimerApp/utils/PomodoroAppCommandLine.h>
 #include <QDialog>
-
-
+#include <PomodoroTimerApp/application/application_settings/application_setting.h>
+#include <memory>
 
 class QMenuBar;
 class QMenu;
@@ -17,21 +17,19 @@ class MainWindow : public QDialog {
 	constexpr static int TIMER_TICK_TIMEOUT = 133;
 
 	// IMPORTANT: DO NOT CHANGE ORDER OF VARIABLES
-	PomodoroAppCommandLine cmdLine;
     ApplicationMode applicationMode;
     MainWindowGuiBuilder guiBuilder;
 	Session* session{};
 	QTimer *timer{};
+	array_of_settings const app_settings;
+
 	static const std::map<PomodoroState const, const char * const> map_button_text_for_state;
-
-    ApplicationMode figureOutAppMode();
-
 
 protected:
     void closeEvent(QCloseEvent *event) override;
 
 public:
-    explicit MainWindow(QApplication *app);
+    MainWindow(QApplication *app, ApplicationMode app_mode);
 
 public slots:
     void fireButtonClickInitial();

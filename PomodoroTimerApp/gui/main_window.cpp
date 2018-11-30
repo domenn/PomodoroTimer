@@ -15,22 +15,17 @@
 #include <PomodoroTimerApp/application/Session.h>
 #include <PomodoroTimerApp/pomodoro/PomodoroSession.h>
 
-MainWindow::MainWindow(QApplication* app)
+MainWindow::MainWindow(QApplication* app, ApplicationMode app_mode)
         :QDialog(nullptr,
         Qt::Window |
                 Qt::WindowMinimizeButtonHint |
                 Qt::WindowMinMaxButtonsHint |
                 Qt::WindowMaximizeButtonHint |
                 Qt::WindowCloseButtonHint),
-         cmdLine(app),
-         applicationMode(figureOutAppMode()),
-         guiBuilder(applicationMode, this) {
+         applicationMode(app_mode),
+         guiBuilder(applicationMode, this), app_settings(ApplicationSetting::make_default_settings_container()) {
 
-    static plog::RollingFileAppender<plog::TxtFormatter> fileAppender(
-            app_directories::getDefaultLogFilePath().toStdString().c_str(), 8000, 2); // Create the 1st appender.
-    static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender; // Create the 2nd appender.
-
-    plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender);
+    ApplicationSetting::load_settings(app_settings);
 
     LOG_INFO << "App starting";
     guiBuilder.build();
@@ -80,10 +75,9 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 }
 
 void MainWindow::fireButtonClickInitial() {
-    if (session){
-        delete session;
-    }
-    session = Session::create(applicationMode);
+    delete session;
+
+    session = Session::create(applicationMode, app_settings);
     auto tm = session->initialize();
     guiBuilder.get_end_button()->setEnabled(true);
     guiBuilder.set_session_start_label(millisecondsToTimer::interval_to_string(tm));
@@ -101,20 +95,14 @@ void MainWindow::fire_button_click() {
     guiBuilder.set_main_timer_label(session->get_main_timer_value());
 }
 
-ApplicationMode MainWindow::figureOutAppMode() {
-    if (cmdLine.isStopwatchMode) {
-        return ApplicationMode::STOPWATCH;
-    }
-    return ApplicationMode::POMODORO_TIMER;
-}
-
 const std::map<PomodoroState const, const char* const> MainWindow::map_button_text_for_state{ // NOLINT(cert-err58-cpp)
         {PomodoroState::INTERRUPTED, "Resume"}, {PomodoroState::PAUSE, "Start next"},
         {PomodoroState::LONG_PAUSE, "Start next"}, {PomodoroState::WORK, "Interrupt"}};
 
 void MainWindow::settings_menu_action_click() {
     LOG_DEBUG << "Settings menu option click";
-    SettingsDialog d;
+    SettingsDialog d(&app_settings, this);
+    d.setMinimumSize(400, 60);
     d.setModal(true);
     d.exec();
 }

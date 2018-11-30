@@ -19,3 +19,12 @@ QString millisecondsToTimer::interval_to_string(qint64 millis) {
     }
 
 }
+
+QString millisecondsToTimer::interval_to_ms_string(qint64 millis) {
+    auto repr1 = interval_to_string(millis);
+    qint64 ms = millis % 1000;
+    if( ms != 0) {
+        repr1 += ":" + QString("%1").arg(ms, 3, 10, QChar('0'));
+    }
+    return repr1;
+}

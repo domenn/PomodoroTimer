@@ -1,10 +1,16 @@
 #include "PomodoroTimerApp/gui/main_window.h"
 #include <QApplication>
 #include <QCommandLineParser>
+#include <External/cpplogger/include/plog/Log.h>
+#include <PomodoroTimerApp/utils/app_directories.h>
+#include <External/cpplogger/include/plog/Appenders/ConsoleAppender.h>
 
 #ifdef RUNNING_POMODORO_TESTS
 #include <iostream>
 #endif
+
+
+
 
 // How to correctly configure project and tests:
 // https://stackoverflow.com/questions/33638433/setup-google-test-in-clion
@@ -13,6 +19,21 @@
 // When timer runs out, textButton doesn't change. It should.
 // Idea: settings window can set times. Give ability to reset to defaults.
 
+ApplicationMode figureOutAppMode(PomodoroAppCommandLine & cmdLine) {
+    if (cmdLine.isStopwatchMode) {
+        return ApplicationMode::STOPWATCH;
+    }
+    return ApplicationMode::POMODORO_TIMER;
+}
+
+void setup_logger() {
+    static plog::RollingFileAppender<plog::TxtFormatter> fileAppender(
+            app_directories::getDefaultLogFilePath().toStdString().c_str(), 8000, 2); // Create the 1st appender.
+    static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender; // Create the 2nd appender.
+
+    plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender);
+}
+
 int main(int argc, char ** argv) {
 #ifdef RUNNING_POMODORO_TESTS
     std::cerr << "This file should not be ran in tests mode! The application will now exit." << endl;
@@ -20,7 +41,9 @@ int main(int argc, char ** argv) {
 #endif
 
     QApplication a(argc, argv);
-    MainWindow w(&a);
+    setup_logger();
+    PomodoroAppCommandLine cmdLine(&a);
+    MainWindow w(&a, figureOutAppMode(cmdLine));
     w.show();
     return QApplication::exec();
 }

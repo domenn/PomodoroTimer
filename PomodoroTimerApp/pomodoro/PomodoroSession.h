@@ -10,6 +10,7 @@
 #include <map>
 #include <vector>
 #include <array>
+#include <PomodoroTimerApp/application/application_settings/application_setting.h>
 
 struct PomodoroSessionSettings{
     const qint64 time_work{1000 * 60 * 25};
@@ -105,7 +106,7 @@ inline void PomodoroSession::select_pause() {
 }
 
 template <typename settings_type>
-Session* const Session::create(const ApplicationMode& mode, settings_type const * const settings_structure) {
+Session* const Session::template_create(const ApplicationMode& mode, settings_type const* const settings_structure) {
     switch (mode) {
     case ApplicationMode::POMODORO_TIMER:
         if (settings_structure != nullptr) {

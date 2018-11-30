@@ -21,6 +21,18 @@ namespace con{
     inline qint64 min_to_ms(qint64 mins){
         return mins*60*1000;
     }
+
+    inline qint64 h_to_ms(qint64 h){
+        return 3600*1000*h;
+    }
+
+    inline qint64 s_to_ms(qint64 s){
+        return s*1000;
+    }
+
+    inline qint64 items_to_ms(qint64 h, qint64 m, qint64 s, qint64 ms){
+        return h_to_ms(h) + min_to_ms(m) + s_to_ms(s) + ms;
+    }
 };
 
 

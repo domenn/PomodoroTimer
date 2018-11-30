@@ -9,6 +9,7 @@
 #include <vector>
 #include <PomodoroTimerApp/pomodoro/PomodoroState.h>
 #include "ApplicationMode.h"
+#include <PomodoroTimerApp/application/application_settings/application_setting.h>
 
 class Session { // NOLINT(cppcoreguidelines-pro-type-member-init)
 protected:
@@ -44,9 +45,11 @@ public:
      * @return Pointer to session on heap. Can be freed with delete.
      */
     template<typename settings_type>
-    static Session* const create(const ApplicationMode& mode, settings_type const* settings_structure);
+    static Session* const template_create(const ApplicationMode& mode, const settings_type* const settings_structure);
 
     static Session* const create(const ApplicationMode& mode);
+
+    static Session* const create(const ApplicationMode& mode, array_of_settings const & settings);
 
     /**
      * The function is basically play/pause handler. Decides what to do: play, pause, and if pause, decides which thing to pause. Returns string for a button.

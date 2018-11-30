@@ -10,6 +10,8 @@
 class millisecondsToTimer {
 public:
     static QString interval_to_string(qint64 millis);
+
+    static QString interval_to_ms_string(qint64 millis);
 };
 
 
