@@ -30,6 +30,13 @@ set(CMAKE_AUTOMOC ON)
 #message("CppLogger sources at ${source_dir}")
 #include_directories(${source_dir}/include)
 
+if ( CMAKE_COMPILER_IS_GNUCC )
+    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Wno-unknown-pragmas")
+endif()
+if ( MSVC )
+    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /W4")
+endif()
+
 # for MSVC
 if(MSVC)
   set(variables 
@@ -54,6 +61,9 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(CMAKE_PREFIX_PATH "C:\\Qt\\5.11.2\\msvc2017_64\\")
 endif ()
 
+#set(Qt5Widgets_DIR C:/msys64/mingw64/qt5-static/lib/cmake/Qt5Widgets)
+#set(CMAKE_PREFIX_PATH C:/msys64/mingw64/qt5-static/)
+# link_directories(C:/msys64/mingw64/qt5-static/share/qt5/plugins/platforms)
 find_package(Qt5Widgets CONFIG REQUIRED)
 
 # Populate a CMake variable with the sources

@@ -59,12 +59,13 @@ PomodoroState PomodoroSession::fireAction() {
 }
 
 PomodoroSession::PomodoroSession(PomodoroSessionSettings const& settings)
-        :time_for_task_({{PomodoroState::PAUSE, settings.time_pause},
+        :long_break_number(settings.long_break_number),
+        time_for_task_({{PomodoroState::PAUSE, settings.time_pause},
         {PomodoroState::WORK, settings.time_work},
         {PomodoroState::LONG_PAUSE, settings.time_long_pause},
         // Interrupted is basically work, so planned time is same
-        {PomodoroState::INTERRUPTED, settings.time_work}}),
-         long_break_number(settings.long_break_number) { }
+        {PomodoroState::INTERRUPTED, settings.time_work}})
+        { }
 
 qint64 PomodoroSession::get_total_elapsed_time_of_kind(PomodoroState kind) const {
     return elapsed_times_[static_cast<int>(kind)] + (kind == state ? calculate_elapsed_time_for_current_run() : 0)
@@ -140,8 +141,8 @@ qint64 PomodoroSession::handle_cache(std::pair<Pomodoro*, integer_type> & variab
 
 int PomodoroSession::count_pomodori_with(bool (* predicate)(const Pomodoro* const)) const {
     int result{};
-    for (int i = 0; i < pomodori_.size() - 1; ++i) {
-        if (predicate(&pomodori_[i])) {
+    for (auto it = pomodori_.begin(), end = pomodori_.end(); it != end-1; ++it){
+        if (predicate(it.base())) {
             ++result;
         }
     }

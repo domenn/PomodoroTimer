@@ -41,10 +41,10 @@ qint64 ApplicationSetting::get_setting_by_key(array_of_settings const& container
 
 array_of_settings ApplicationSetting::make_default_settings_container() {
     return {
-            std::make_shared<TimeSetting>("Work time", KEY_S_WORK_TIME),
-            std::make_shared<TimeSetting>("Pause time", KEY_S_PAUSE_TIME),
-            std::make_shared<TimeSetting>("Long pause time", KEY_S_LONG_PAUSE_TIME),
-            std::make_shared<IntegerSetting>("Long pause pomodoro number", KEY_S_LONG_PAUSE_WHICH)
+            std::make_shared<TimeSetting>("Work time", ApplicationSetting::KEY_S_WORK_TIME),
+            std::make_shared<TimeSetting>("Pause time", ApplicationSetting::KEY_S_PAUSE_TIME),
+            std::make_shared<TimeSetting>("Long pause time", ApplicationSetting::KEY_S_LONG_PAUSE_TIME),
+            std::make_shared<IntegerSetting>("Long pause pomodoro number", ApplicationSetting::KEY_S_LONG_PAUSE_WHICH)
     };
 }
 

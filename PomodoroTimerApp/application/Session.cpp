@@ -19,7 +19,7 @@ Session* const Session::create(const ApplicationMode& mode, array_of_settings co
                 ApplicationSetting::get_setting_by_key(settings,
                         ApplicationSetting::KEY_S_LONG_PAUSE_TIME),
                 static_cast<const qint8>(ApplicationSetting::get_setting_by_key(settings,
-                        ApplicationSetting::KEY_S_WORK_TIME))
+                        ApplicationSetting::KEY_S_LONG_PAUSE_WHICH))
         };
         return template_create<PomodoroSessionSettings>(mode, &settings_structure);
     }

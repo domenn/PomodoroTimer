@@ -40,7 +40,7 @@ void MainWindowGuiBuilder::createAdditionalInfoItems(QVBoxLayout* pLayout) {
 
     auto* layout = new QFormLayout;
     auto ptr_struct_items = reinterpret_cast<additional_info_field*>(&additional_info_fields);
-    for (int i = 0; i < sizeof(additional_info_fields) / sizeof(additional_info_field); ++i) {
+    for (std::size_t i = 0; i <(sizeof(additional_info_fields) / sizeof(additional_info_field)); ++i) {
         auto itm = ptr_struct_items + i;
         itm->first = new QLabel(itm->second);
         layout->addRow(new QLabel(itm->second), itm->first);

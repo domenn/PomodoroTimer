@@ -4,7 +4,6 @@
 
 #pragma once
 #include <QtCore>
-#include <QWidget>
 #include <map>
 
 class ApplicationSetting;
@@ -49,5 +48,3 @@ public:
     static array_of_settings make_default_settings_container();
     static void persist_settings(array_of_settings const & vector);
 };
-
-
