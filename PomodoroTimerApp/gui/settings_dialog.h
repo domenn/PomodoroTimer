@@ -23,10 +23,11 @@ private:
     typedef ApplicationSetting sk;
 //        std::array<std::unique_ptr<ApplicationSetting>, 1> settings{
 //            std::make_unique<TimeSetting>("Work time", KEY_S_WORK_TIME)};
-    array_of_settings const * const settings;
+    array_of_settings const* const settings;
 
 public slots:
     void accept() override;
+    void show_help();
 };
 
 

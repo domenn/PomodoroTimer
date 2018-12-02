@@ -12,7 +12,7 @@ typedef std::vector<std::shared_ptr<ApplicationSetting>> array_of_settings;
 
 class ApplicationSetting {
 
-    constexpr static char const * const SETTINGS_KEY_APP = "app_settings/";
+    constexpr static char const* const SETTINGS_KEY_APP = "app_settings/";
 
 protected:
     qint64 value{};
@@ -30,21 +30,23 @@ public:
 
     const QString gui_text;
     const QString options_key;
-
+    const QString tooltip_text;
 
     virtual qint64 get_value() const { return value; }
+
     virtual qint64 widget_to_value() = 0;
     virtual QWidget* const create_widget(qint64 time_str) = 0;
-    virtual QWidget* const create_widget(QString const &) = 0;
+    virtual QWidget* const create_widget(QString const&) = 0;
 
-    ApplicationSetting(QString gui_text, QString options_key)
-            :gui_text(std::move(gui_text)), options_key(std::move(options_key)) { }
+    ApplicationSetting(QString gui_text, QString options_key, QString tooltip_text)
+            :gui_text(std::move(gui_text)), options_key(std::move(options_key)),
+             tooltip_text(std::move(tooltip_text)) { }
 
     ApplicationSetting() = default;
 
     static QSettings application_settings();
-    static void load_settings(array_of_settings const & container);
+    static void load_settings(array_of_settings const& container);
     static qint64 get_setting_by_key(array_of_settings const& container, char const* key);
     static array_of_settings make_default_settings_container();
-    static void persist_settings(array_of_settings const & vector);
+    static void persist_settings(array_of_settings const& vector);
 };

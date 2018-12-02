@@ -6,7 +6,7 @@
 #include "gtest/gtest.h"
 #include <PomodoroTimerApp/utils/mockable_datetime.h>
 #include <PomodoroTimerApp/application/ApplicationMode.h>
-#include <PomodoroTimerApp/utils/date_format_converter.h>
+#include <PomodoroTimerApp/utils/date_time_format_converter.h>
 #include <PomodoroTimerApp/pomodoro/PomodoroState.h>
 
 #include "make_application.h"

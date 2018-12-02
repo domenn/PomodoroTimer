@@ -12,7 +12,7 @@ public:
     QWidget* const create_widget(qint64 millis) override;
     QWidget* const create_widget(QString const& string) override;
 
-    TimeSetting(const QString& gui_text, const QString& options_key);
+    TimeSetting(const QString& gui_text, const QString& options_key, const QString& tooltip_text = "");
 
     TimeSetting();
 };

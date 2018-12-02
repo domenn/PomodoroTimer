@@ -5,8 +5,6 @@
 #include <QtWidgets/QLineEdit>
 #include "integer_setting.h"
 
-
-
 QWidget* const IntegerSetting::create_widget(const qint64 number) {
     return create_widget(QString::number(number, 10));
 }
@@ -16,8 +14,8 @@ QWidget* const IntegerSetting::create_widget(QString const& string) {
     return widget;
 }
 
-IntegerSetting::IntegerSetting(const QString& gui_text, const QString& options_key)
-        :ApplicationSetting(gui_text, options_key) { }
+IntegerSetting::IntegerSetting(const QString& gui_text, const QString& options_key, const QString& tooltip_text)
+        :ApplicationSetting(gui_text, options_key, tooltip_text) { }
 
 qint64 IntegerSetting::widget_to_value() {
     if (!widget) {

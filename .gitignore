@@ -54,3 +54,4 @@ CMakeLists.txt.user*
 .idea/*
 !.idea/runConfigurations/
 !.idea/fileTemplates/
+!.idea/codeStyles/

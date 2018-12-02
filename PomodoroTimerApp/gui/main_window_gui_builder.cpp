@@ -9,7 +9,9 @@
 #include <QPushButton>
 #include <QFormLayout>
 #include <QLabel>
-#include <PomodoroTimerApp/utils/millisecondsToTimer.h>
+#include <PomodoroTimerApp/utils/date_time_format_converter.h>
+#include <QGuiApplication>
+#include <QScreen>
 
 #pragma clang diagnostic push
 // Ignore IDE warnings for QVBoxLayout * casting for file
@@ -33,14 +35,13 @@ void MainWindowGuiBuilder::build() {
     } else {
         initializeStopwatch();
     }
-
 }
 
 void MainWindowGuiBuilder::createAdditionalInfoItems(QVBoxLayout* pLayout) {
 
     auto* layout = new QFormLayout;
     auto ptr_struct_items = reinterpret_cast<additional_info_field*>(&additional_info_fields);
-    for (std::size_t i = 0; i <(sizeof(additional_info_fields) / sizeof(additional_info_field)); ++i) {
+    for (std::size_t i = 0; i < (sizeof(additional_info_fields) / sizeof(additional_info_field)); ++i) {
         auto itm = ptr_struct_items + i;
         itm->first = new QLabel(itm->second);
         layout->addRow(new QLabel(itm->second), itm->first);
@@ -141,7 +142,7 @@ void MainWindowGuiBuilder::initializeStopwatch() {
 }
 
 void MainWindowGuiBuilder::set_main_timer_label(qint64 const millis) {
-    mainTimerLabel->setText(millisecondsToTimer::interval_to_string(millis));
+    mainTimerLabel->setText(con::interval_to_string(millis, false));
 }
 
 void MainWindowGuiBuilder::fire_action_gui_update(Session const* const session, QString const& fire_btn_text) {
@@ -153,19 +154,19 @@ void MainWindowGuiBuilder::fire_action_gui_update(Session const* const session, 
 
 void MainWindowGuiBuilder::update_time_labels(Session const* const session) {
     additional_info_fields.lTimeSinceSessionStart.first
-            ->setText(millisecondsToTimer::interval_to_string(session->get_total_time()));
+            ->setText(con::interval_to_string(session->get_total_time(), false));
 
     additional_info_fields.lTotalPause.first
-            ->setText(millisecondsToTimer::interval_to_string(session->get_total_pause()));
+            ->setText(con::interval_to_string(session->get_total_pause(), false));
 
     additional_info_fields.lTotalWork.first->setText(
-            millisecondsToTimer::interval_to_string(session->get_total_elapsed_time_of_kind(PomodoroState::WORK)));
+            con::interval_to_string(session->get_total_elapsed_time_of_kind(PomodoroState::WORK), false));
 
     additional_info_fields.lTotalSessionTime.first
-            ->setText(millisecondsToTimer::interval_to_string(session->get_total_non_interrupted_time()));
+            ->setText(con::interval_to_string(session->get_total_non_interrupted_time(), false));
 
-    additional_info_fields.lCheatedTime.first->setText(millisecondsToTimer::interval_to_string(
-            session->get_total_elapsed_time_of_kind(PomodoroState::INTERRUPTED)));
+    additional_info_fields.lCheatedTime.first->setText(con::interval_to_string(
+            session->get_total_elapsed_time_of_kind(PomodoroState::INTERRUPTED), false));
 
 }
 
@@ -175,6 +176,17 @@ void MainWindowGuiBuilder::set_session_start_label(const QString& qString) {
 
 void MainWindowGuiBuilder::set_settings_menu_item_enabled(const bool b) {
     settings_menu_action->setEnabled(b);
+}
+
+void MainWindowGuiBuilder::experimentalFakeToast() {
+    QFrame* notifier = new QFrame;
+    notifier->setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    notifier->setFocusPolicy(Qt::NoFocus);
+    const QRect availableGeometry = QGuiApplication::primaryScreen()->availableGeometry();
+    QRect geom = notifier->geometry();
+    geom.moveBottomRight(availableGeometry.bottomRight() - QPoint(20, 20));
+    notifier->setGeometry(geom);
+    notifier->show();
 }
 
 #pragma clang diagnostic pop

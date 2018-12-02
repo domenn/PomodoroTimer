@@ -48,7 +48,7 @@ TEST(timeSettingObject, getValue) {
 
     // hh:mm:ss
     widg->setText("16:44:31");
-    tm.setHMS(16,44,31,0);
+    tm.setHMS(16, 44, 31, 0);
     ASSERT_EQ(tm.msecsSinceStartOfDay(), setting.widget_to_value());
 
     delete widg;
@@ -57,7 +57,7 @@ TEST(timeSettingObject, getValue) {
 //
     // AssumeMinutes
     widg->setText("211");
-    tm.setHMS(3,31,0,0);
+    tm.setHMS(3, 31, 0, 0);
     ASSERT_EQ(tm.msecsSinceStartOfDay(), setting.widget_to_value());
 
     delete widg;
@@ -67,7 +67,7 @@ TEST(timeSettingObject, getValue) {
 
     // OnlyDisplayMinutes
     widg->setText("39");
-    tm.setHMS(0,39,0,0);
+    tm.setHMS(0, 39, 0, 0);
     ASSERT_EQ(tm.msecsSinceStartOfDay(), setting.widget_to_value());
 
     delete widg;
