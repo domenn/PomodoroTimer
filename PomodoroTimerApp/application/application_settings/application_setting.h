@@ -26,6 +26,8 @@ public:
     constexpr static char const* const KEY_S_LONG_PAUSE_TIME = "lpause_time";
     constexpr static char const* const KEY_S_LONG_PAUSE_WHICH = "lp_after";
 
+    constexpr static char const* const APPLICATION_NAME = "PomodoroTimerApplication";
+
     static const std::map<QString const, qint64> MAP_DEFAULT_SETTINGS;
 
     const QString gui_text;

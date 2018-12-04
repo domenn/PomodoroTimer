@@ -26,7 +26,7 @@ public:
     /**
     * Returns the main timer in ms. For Pomodoro timer this is the current timer.
     */
-    virtual qint64 get_main_timer_value() = 0;
+    virtual qint64 get_main_timer_value() const = 0;
 
     /**
      * Returns JSON string that can be used to save state before exit.
@@ -85,5 +85,7 @@ public:
     virtual int get_interrupted_pomodori() const = 0;
 
     virtual int get_non_interrupted_pomodori() const = 0;
+
+    virtual bool is_timer_expired() const = 0;
 
 };

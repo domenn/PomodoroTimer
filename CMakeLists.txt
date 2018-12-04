@@ -79,5 +79,10 @@ list(FILTER SOURCE_FILES EXCLUDE REGEX ".*main.cpp$")
 
 add_subdirectory(./PomodoroTimerAppTest)
 
+if (UNIX)
+    add_subdirectory(./Notifications/LinuxNotifications)
+    set(NOTIFICATION_IMPLEMENTATION linux_notification)
+endif (UNIX)
+
 add_executable(PomodoroTimer PomodoroTimerApp/main.cpp ${SOURCE_FILES})
-target_link_libraries(PomodoroTimer Qt5::Widgets)
+target_link_libraries(PomodoroTimer Qt5::Widgets ${NOTIFICATION_IMPLEMENTATION})

@@ -50,6 +50,13 @@ namespace con {
      */
     QString interval_to_ms_string(qint64 millis, const QString& ms_sep = ".", bool always_add_hours = false);
 
+    /**
+     * Similiar than interval_to_string, but also handles negative numbers correctly. Therfore slightly heavier.
+     * For parameters check documentation of interval_to_string. Doesn't show milliseconds.
+     * @return String representation of provided timestamp.
+     */
+    QString interval_to_string2(qint64 millis, bool always_add_hours = false);
+
 //    template <typename return_type>
 //    str_type ms_since_epoch_to_datetime_str(qint64 millis, QString );
 };

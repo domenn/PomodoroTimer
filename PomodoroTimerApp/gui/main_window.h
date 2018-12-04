@@ -14,6 +14,8 @@ class Session;
 class MainWindow : public QDialog {
 
     constexpr static int TIMER_TICK_TIMEOUT = 133;
+    constexpr static char const * const TIMEOUT_WORK_TEXT = "Begin pause";
+    constexpr static char const * const TIMEOUT_PAUSE_TEXT = "Start next";
 
     // IMPORTANT: DO NOT CHANGE ORDER OF VARIABLES
     ApplicationMode applicationMode;
@@ -21,6 +23,7 @@ class MainWindow : public QDialog {
     Session* session{};
     QTimer* timer{};
     array_of_settings const app_settings;
+    bool notified{};
 
     static const std::map<PomodoroState const, const char* const> map_button_text_for_state;
 
@@ -39,4 +42,5 @@ public slots:
     void myTimerHandler();
     void settings_menu_action_click();
     void create_timer();
+    void try_notify_timeout(PomodoroState state);
 };

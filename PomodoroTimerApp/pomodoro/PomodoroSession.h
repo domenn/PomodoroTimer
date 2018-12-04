@@ -60,7 +60,7 @@ public:
     explicit PomodoroSession(PomodoroSessionSettings const & settings = {});
     inline bool is_current_pomodoro_long_pause() const;
 	qint64 initialize() override;
-	qint64 get_main_timer_value() override;
+	qint64 get_main_timer_value() const override;
 	QString saveState() override;
 	void restore(const QString &state) override;
     PomodoroState fireAction() override;
@@ -75,6 +75,7 @@ public:
     qint64 get_session_start_time() const override;
     int get_interrupted_pomodori() const override;
     int get_non_interrupted_pomodori() const override;
+    bool is_timer_expired() const override;
 };
 
 

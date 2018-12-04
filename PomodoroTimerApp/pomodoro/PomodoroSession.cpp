@@ -20,7 +20,7 @@ qint64 PomodoroSession::initialize() {
     return work_start_timestamp_;
 }
 
-qint64 PomodoroSession::get_main_timer_value() {
+qint64 PomodoroSession::get_main_timer_value() const {
     auto elapsed = state != PomodoroState::INTERRUPTED ? current_pomodoro_->get_time_of_kind(state, true)
             : current_pomodoro_->get_time_of_kind(PomodoroState::WORK);
 
@@ -155,4 +155,8 @@ int PomodoroSession::get_interrupted_pomodori() const {
 
 int PomodoroSession::get_non_interrupted_pomodori() const {
     return static_cast<int>(handle_cache<int>(cache_non_interrupted_pomodori, &PomodoroSession::calculate_non_interrupted_pomodori));
+}
+
+bool PomodoroSession::is_timer_expired() const {
+    return get_main_timer_value() < 0;
 }

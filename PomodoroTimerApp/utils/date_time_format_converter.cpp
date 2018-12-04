@@ -28,3 +28,12 @@ QString con::interval_to_ms_string(qint64 millis, const QString& ms_sep, bool co
     }
     return repr1;
 }
+
+QString con::interval_to_string2(qint64 const millis, bool const always_add_hours) {
+    auto temporary = interval_to_string(millis, always_add_hours);
+    if (millis < 0){
+        temporary.replace("-", "");
+        temporary.insert(0, '-');
+    }
+    return temporary;
+}

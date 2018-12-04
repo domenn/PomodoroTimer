@@ -15,6 +15,8 @@
 #include <PomodoroTimerApp/pomodoro/PomodoroSession.h>
 #include <PomodoroTimerApp/utils/date_time_format_converter.h>
 
+#include <Notifications/notifications_api.h>
+
 MainWindow::MainWindow(QApplication* app, ApplicationMode app_mode)
         :QDialog(nullptr,
         Qt::Window |
@@ -25,6 +27,7 @@ MainWindow::MainWindow(QApplication* app, ApplicationMode app_mode)
          applicationMode(app_mode),
          guiBuilder(applicationMode, this), app_settings(ApplicationSetting::make_default_settings_container()) {
 
+    libn_init(ApplicationSetting::APPLICATION_NAME);
     ApplicationSetting::load_settings(app_settings);
 
     LOG_INFO << "App starting";
@@ -34,10 +37,12 @@ MainWindow::MainWindow(QApplication* app, ApplicationMode app_mode)
 
 void MainWindow::myTimerHandler() {
     auto theNumber = session->get_main_timer_value();
-    auto stringTimeRepr = con::interval_to_string(theNumber, false);
+    auto stringTimeRepr = con::interval_to_string2(theNumber, false);
 
     guiBuilder.getMainTimerLabel()->setText(stringTimeRepr);
     guiBuilder.update_time_labels(session);
+
+    try_notify_timeout(session->get_current_state());
 }
 
 void MainWindow::finishButtonClick() {
@@ -104,12 +109,13 @@ void MainWindow::fire_button_click() {
         ss << (prev_state == PomodoroState::INTERRUPTED ? "Resuming" : "Starting") << " pomodoro: " << p_num;
         log_current_times(ss.str());
     }
+    notified = false;
 }
 
 const std::map<PomodoroState const, const char* const> MainWindow::map_button_text_for_state{ // NOLINT(cert-err58-cpp)
         {PomodoroState::INTERRUPTED, "Resume"},
-        {PomodoroState::PAUSE, "Start next"},
-        {PomodoroState::LONG_PAUSE, "Start next"},
+        {PomodoroState::PAUSE, TIMEOUT_PAUSE_TEXT},
+        {PomodoroState::LONG_PAUSE, TIMEOUT_PAUSE_TEXT},
         {PomodoroState::WORK, "Interrupt"}};
 
 void MainWindow::settings_menu_action_click() {
@@ -139,4 +145,21 @@ void MainWindow::log_current_times(const std::string& text_to_log) {
              << ". Pause: " << con::as_minutes(pt) << ". Effective: " << con::as_minutes(effective_time)
              << ". Interrupted: " <<
              con::as_minutes(it) << ". Total: " << con::as_minutes(session->get_total_time()) << ".";
+}
+
+void MainWindow::try_notify_timeout(PomodoroState const state) {
+    if(!session->is_timer_expired() || notified){
+        return;
+    }
+    notified = true;
+    if (state == PomodoroState::WORK) {
+        LibnNotificationButton b2 {"No pause plz", nullptr, ([](){ LOG_DEBUG << "Callback for Second"; }) };
+        LibnNotificationButton b1 {"OK", &b2, ([](){ LOG_DEBUG << "Callback for OK"; }) };
+        libn_show("Work timer run out.", "Start pause?", &b1);
+        guiBuilder.getFireButton()->setText(TIMEOUT_WORK_TEXT);
+
+    } else {
+        libn_show("Pause finished.", "Start next round?", nullptr);
+        guiBuilder.getFireButton()->setText(TIMEOUT_PAUSE_TEXT);
+    }
 }
