@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="PomodoroTimerStopwatch" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--stopwatch" PASS_PARENT_ENVS_2="true" PROJECT_NAME="PomodoroTimer" TARGET_NAME="PomodoroTimer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="PomodoroTimer" RUN_TARGET_NAME="PomodoroTimer">
+    <method v="2">
+      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -188,6 +188,7 @@ void MainWindow::myTimerHandler() {
     auto stringTimeRepr = millisecondsToTimer::intervalToString(theNumber);
     if (tickCount++ >= 1800) {
         Logger::getDefaultLogger().write("Current timer status: " + stringTimeRepr);
+        tickCount = 0;
     }
 
 
