@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 # Find includes in corresponding build directories
 # set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed
+option(ALWAYS_USE_QT_NOTIFICATION "If off, the software can use Windows or Linux notification systems" ON)
 include_directories(. External/cpplogger/include)
 set(CMAKE_AUTOMOC ON)
 # Create code from a list of Qt designer ui files
@@ -39,7 +40,7 @@ endif()
 
 # for MSVC
 if(MSVC)
-  set(variables 
+  set(variables
     CMAKE_CXX_FLAGS_DEBUG
     CMAKE_CXX_FLAGS_RELEASE
 	CMAKE_CXX_FLAGS_RELWITHDEBINFO
@@ -79,10 +80,14 @@ list(FILTER SOURCE_FILES EXCLUDE REGEX ".*main.cpp$")
 
 add_subdirectory(./PomodoroTimerAppTest)
 
-if (UNIX)
+if (${ALWAYS_USE_QT_NOTIFICATION})
+    add_library(qt_toast_notification STATIC Notifications/qt_notification_item.cpp)
+    target_link_libraries(qt_toast_notification Qt5::Widgets)
+    set(NOTIFICATION_IMPLEMENTATION qt_toast_notification)
+elseif (UNIX)
     add_subdirectory(./Notifications/LinuxNotifications)
     set(NOTIFICATION_IMPLEMENTATION linux_notification)
-endif (UNIX)
+endif ()
 
 add_executable(PomodoroTimer PomodoroTimerApp/main.cpp ${SOURCE_FILES})
 target_link_libraries(PomodoroTimer Qt5::Widgets ${NOTIFICATION_IMPLEMENTATION})

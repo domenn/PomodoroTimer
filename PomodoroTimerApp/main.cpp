@@ -40,7 +40,7 @@ void setup_logger() {
             app_directories::getDefaultLogFilePath().toStdString().c_str(), 8000, 2); // Create the 1st appender.
     static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender; // Create the 2nd appender.
 
-    plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender);
+    plog::init(plog::verbose, &fileAppender).addAppender(&consoleAppender);
 }
 
 int main(int argc, char** argv) {

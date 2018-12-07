@@ -178,15 +178,6 @@ void MainWindowGuiBuilder::set_settings_menu_item_enabled(const bool b) {
     settings_menu_action->setEnabled(b);
 }
 
-void MainWindowGuiBuilder::experimentalFakeToast() {
-    QFrame* notifier = new QFrame;
-    notifier->setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-    notifier->setFocusPolicy(Qt::NoFocus);
-    const QRect availableGeometry = QGuiApplication::primaryScreen()->availableGeometry();
-    QRect geom = notifier->geometry();
-    geom.moveBottomRight(availableGeometry.bottomRight() - QPoint(20, 20));
-    notifier->setGeometry(geom);
-    notifier->show();
-}
+
 
 #pragma clang diagnostic pop

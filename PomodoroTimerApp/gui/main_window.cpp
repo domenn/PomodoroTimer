@@ -33,6 +33,8 @@ MainWindow::MainWindow(QApplication* app, ApplicationMode app_mode)
     LOG_INFO << "App starting";
     guiBuilder.build();
 
+    libn_show("Title of that thingy. Long.", "Some not very super short text. Lol. Wtf.", nullptr);
+    // libn_show("Testing", "Just short TXT.", nullptr);
 }
 
 void MainWindow::myTimerHandler() {

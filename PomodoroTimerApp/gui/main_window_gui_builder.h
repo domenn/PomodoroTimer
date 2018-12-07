@@ -74,6 +74,5 @@ private:
     QLabel* createMainTimerLabel(QLayout* targetQLayout);
     void createStartStopButtons(QLayout*);
     void createAdditionalInfoItems(QVBoxLayout* pLayout);
-    void experimentalFakeToast();
 
 };
