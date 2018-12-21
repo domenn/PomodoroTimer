@@ -7,8 +7,8 @@
 #include "time_setting.h"
 
 QWidget* const TimeSetting::create_widget(const qint64 millis) {
-    auto str_repr = con::interval_to_ms_string(millis);
-    if (str_repr.startsWith("00:")) {
+    auto str_repr = con::interval_to_ms_string(millis, ":");
+    if (str_repr.startsWith ("00:")){
         str_repr.remove(0, 3);
     }
     if (str_repr.length() == 5 && str_repr.endsWith(":00")) {

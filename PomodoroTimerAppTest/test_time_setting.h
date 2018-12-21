@@ -20,8 +20,8 @@ TEST(timeSettingObject, getValue) {
     QTime tm(1, 3, 44, 331);
     setting.create_widget("1:03:44:331");
     ASSERT_EQ(tm.msecsSinceStartOfDay(), setting.widget_to_value());
-    auto widg_poly = setting.create_widget(tm.msecsSinceStartOfDay());
-    auto widg = dynamic_cast<QLineEdit*>(widg_poly);
+    auto widg_polymorphic = setting.create_widget(tm.msecsSinceStartOfDay());
+    auto widg = dynamic_cast<QLineEdit*>(widg_polymorphic);
     ASSERT_EQ("01:03:44:331", widg->text());
 
     widg->setText("1:3:44:331");

@@ -13,4 +13,4 @@ file(GLOB_RECURSE TEST_SRC_FILES
 add_executable(pomodoroTests ${TEST_SRC_FILES} ${SOURCE_FILES})
 target_compile_definitions(pomodoroTests PUBLIC RUNNING_POMODORO_TESTS)
 
-target_link_libraries(pomodoroTests gtest gtest_main Qt5::Widgets)
+target_link_libraries(pomodoroTests gtest gtest_main ${NOTIFICATION_IMPLEMENTATION} Qt5::Widgets)

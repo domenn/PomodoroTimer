@@ -142,7 +142,7 @@ qint64 PomodoroSession::handle_cache(std::pair<Pomodoro*, integer_type> & variab
 int PomodoroSession::count_pomodori_with(bool (* predicate)(const Pomodoro* const)) const {
     int result{};
     for (auto it = pomodori_.begin(), end = pomodori_.end(); it != end-1; ++it){
-        if (predicate(it.base())) {
+        if (predicate(&(*it))) {
             ++result;
         }
     }

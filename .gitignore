@@ -16,6 +16,7 @@ CTestTestfile.cmake
 
 # CMake
 cmake-build-*/
+cmake-msvc-*/
 CMakeLists.txt.user*
 ### C++ template
 # Prerequisites
@@ -55,3 +56,5 @@ CMakeLists.txt.user*
 !.idea/runConfigurations/
 !.idea/fileTemplates/
 !.idea/codeStyles/
+
+.vs/

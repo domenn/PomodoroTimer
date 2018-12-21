@@ -1,9 +1,7 @@
 #include "PomodoroTimerApp/gui/main_window.h"
 #include <QApplication>
 #include <QCommandLineParser>
-#include <External/cpplogger/include/plog/Log.h>
-#include <PomodoroTimerApp/utils/app_directories.h>
-#include <External/cpplogger/include/plog/Appenders/ConsoleAppender.h>
+#include "utils/get_logger_function.h"
 
 #ifdef RUNNING_POMODORO_TESTS
 #include <iostream>
@@ -35,13 +33,7 @@ ApplicationMode figureOutAppMode(PomodoroAppCommandLine& cmdLine) {
     return ApplicationMode::POMODORO_TIMER;
 }
 
-void setup_logger() {
-    static plog::RollingFileAppender<plog::TxtFormatter> fileAppender(
-            app_directories::getDefaultLogFilePath().toStdString().c_str(), 8000, 2); // Create the 1st appender.
-    static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender; // Create the 2nd appender.
 
-    plog::init(plog::verbose, &fileAppender).addAppender(&consoleAppender);
-}
 
 int main(int argc, char** argv) {
 #ifdef RUNNING_POMODORO_TESTS

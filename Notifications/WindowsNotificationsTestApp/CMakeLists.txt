@@ -1,0 +1,3 @@
+
+add_executable(WindowsNotificationTestApp qt_testing.cpp)
+target_link_libraries(WindowsNotificationTestApp Qt5::Widgets)

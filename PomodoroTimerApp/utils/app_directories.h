@@ -9,14 +9,13 @@
 #include <QtCore/QDir>
 
 namespace app_directories {
-
-    inline QString getDefaultLogFilePath() {
-        QString application_folder = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-        QDir dir(application_folder);
-        if (!dir.exists())
-            dir.mkpath(application_folder);
-
-        auto filename = dir.absoluteFilePath("log.txt");
-        return filename;
+	inline QString getDefaultLogFilePath(QString in_filename = "log.txt") {
+		auto application_folder = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+		QDir dir(application_folder);
+		if (!dir.exists()) {
+			dir.mkpath(application_folder);
+		}
+		QString filename = dir.absoluteFilePath(in_filename);
+    	return filename;
     }
 }

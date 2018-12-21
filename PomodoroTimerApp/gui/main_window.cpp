@@ -155,10 +155,10 @@ void MainWindow::try_notify_timeout(PomodoroState const state) {
     }
     notified = true;
     if (state == PomodoroState::WORK) {
-        LibnNotificationButton b2 {"No pause plz", nullptr, ([](){ LOG_DEBUG << "Callback for Second"; }) };
-        LibnNotificationButton b1 {"OK", &b2, ([](){ LOG_DEBUG << "Callback for OK"; }) };
+        /*LibnNotificationButton b2 {"No pause plz", nullptr, ([this](){ LOG_DEBUG << "Callback for Second"; }) };
+        LibnNotificationButton b1 {"OK", &b2, ([this](){ LOG_DEBUG << "Callback for OK"; }) };
         libn_show("Work timer run out.", "Start pause?", &b1);
-        guiBuilder.getFireButton()->setText(TIMEOUT_WORK_TEXT);
+        guiBuilder.getFireButton()->setText(TIMEOUT_WORK_TEXT);*/
 
     } else {
         libn_show("Pause finished.", "Start next round?", nullptr);
