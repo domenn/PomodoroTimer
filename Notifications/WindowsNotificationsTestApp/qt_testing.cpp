@@ -9,6 +9,8 @@
 
 #include "PomodoroTimerApp/utils/get_logger_function.h"
 
+#include <Notifications/notifications_api.h>
+
 class DummyCommunicator : public QObject
 {
 	Q_OBJECT
@@ -16,7 +18,7 @@ class DummyCommunicator : public QObject
 public slots:
 	void some_button()
 	{
-		LOG_INFO << "That BTN clicked.";
+		libn_show("empty", "ss", nullptr);
 	}
 };
 
@@ -33,7 +35,7 @@ QPushButton*  add_button(QWidget* const window, const QString & text, QVBoxLayou
 int main(int argc, char **argv)
 {
 	setup_logger("windowsTestQtApp.log", plog::verbose);
-	LOG_VERBOSE << "Windows testing app up and running.";
+	// LOG_VERBOSE << "Windows testing app up and running.";
 
 	DummyCommunicator shitter;
 

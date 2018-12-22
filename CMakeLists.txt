@@ -3,6 +3,10 @@ project(PomodoroTimer)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
+
 option(ALWAYS_USE_QT_NOTIFICATION "If off, the software can use Windows or Linux notification systems" ON)
 include_directories(. External/cpplogger/include)
 if ( MSVC )
@@ -14,7 +18,7 @@ if ( CMAKE_COMPILER_IS_GNUCC )
     set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Wno-unknown-pragmas")
 endif()
 if ( MSVC )
-    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /W4")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 endif()
 
 # for MSVC
@@ -54,7 +58,10 @@ file(GLOB_RECURSE SOURCE_FILES
         ./PomodoroTimerApp/*.h
         )
 
-#message(WARNING "${SOURCE_FILES}")
+get_target_property(Qt5Widgets_location Qt5::Widgets LOCATION)
+get_filename_component(QT5_BINARY_DIRECTORY ${Qt5Widgets_location} DIRECTORY)
+
+#message(WARNING "${CMAKE_BINARY_DIR}")
 
 list(FILTER SOURCE_FILES EXCLUDE REGEX ".*main.cpp$")
 #message(WARNING "${SOURCE_FILES}")
@@ -71,9 +78,25 @@ endif ()
 add_subdirectory(./PomodoroTimerAppTest)
 
 if(MSVC)
-    add_subdirectory(./Notifications/WindowsNotificationsTestApp)
     add_subdirectory(./Notifications/WindowsNotifications)
+    add_subdirectory(./Notifications/WindowsNotificationsTestApp)
 endif()
+
+#ADD_CUSTOM_TARGET(copy_dll_windows ALL
+#        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} ${link})
+
+#ADD_CUSTOM_TARGET(
+#        copy_dll_windows ALL
+#        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#        $<TARGET_FILE:Qt5::Widgets>
+#        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+#)
 
 add_executable(PomodoroTimer PomodoroTimerApp/main.cpp ${SOURCE_FILES})
 target_link_libraries(PomodoroTimer Qt5::Widgets ${NOTIFICATION_IMPLEMENTATION})
+
+#get_cmake_property(_variableNames VARIABLES)
+#list (SORT _variableNames)
+#foreach (_variableName ${_variableNames})
+#    message(STATUS "${_variableName}=${${_variableName}}")
+#endforeach()
